@@ -60,7 +60,8 @@ function goEdit() {
 
 async function routeAfterLogin() {
 	try {
-		const existed = await userApi.isUserInfoByIdExisted()
+		const userId = uni.getStorageSync('user_id')
+		const existed = await userApi.isUserInfoByIdExisted(userId)
 		if (existed) {
 			goPost()
 		} else {
@@ -205,7 +206,7 @@ async function onSubmit() {
 
 				<view class="btn" :class="{ disabled: !canSubmit }" @tap="onSubmit">
 					<text v-if="!loading">{{ btnText }}</text>
-					<text v-else>处理中...</text>
+					<text v-else>登录中...</text>
 				</view>
 
 				<view class="links">
@@ -292,7 +293,7 @@ async function onSubmit() {
 }
 
 .d2 {
-	background: #ffe27a;
+	background: #b4ff85;
 }
 
 .title {

@@ -19,6 +19,13 @@ export const userApi = {
 
 	updateUserInfo(data) {
 		return request.post('/userInfo', data)
+	},
+
+	isUserInfoByIdExisted(userId) {
+		if (userId === undefined || userId === null || userId === '') {
+			return request.get('/userInfo/isExisted')
+		}
+		return request.get('/userInfo/isExisted', { userId })
 	}
 }
 
