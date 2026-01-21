@@ -206,7 +206,7 @@ async function onSubmit() {
 
 				<view class="btn" :class="{ disabled: !canSubmit }" @tap="onSubmit">
 					<text v-if="!loading">{{ btnText }}</text>
-					<text v-else>登录中...</text>
+					<text v-else>请等待...</text>
 				</view>
 
 				<view class="links">
@@ -293,7 +293,7 @@ async function onSubmit() {
 }
 
 .d2 {
-	background: #b4ff85;
+	background: #ffd011;
 }
 
 .title {
@@ -376,7 +376,7 @@ async function onSubmit() {
 	margin-top: 34rpx;
 	height: 98rpx;
 	border-radius: 999rpx;
-	background: linear-gradient(90deg, #9bce44 0%, #39a9fe 100%);
+	background: linear-gradient(90deg, #6ace34 0%, #39a9fe 100%);
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -1,0 +1,1759 @@
+openapi: "3.0.1"
+info:
+  title: "API Documentation"
+  version: "1.0"
+paths:
+  /api/ai/chat:
+    get:
+      summary: "chat"
+      description: "chat"
+      parameters:
+      - name: "message"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+  /ip:
+    post:
+      summary: "uploadIP"
+      description: "uploadIP"
+      parameters:
+      - name: "ip"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: "No Content"
+  /file:
+    get:
+      summary: "getFileUrlInfoBeforeUpload"
+      description: "getFileUrlInfoBeforeUpload"
+      parameters:
+      - name: "rawFileName"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      - name: "Category"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  PresignedUrl:
+                    type: "string"
+                    description: ""
+                  DownloadUrl:
+                    type: "string"
+                    description: ""
+  /like:
+    get:
+      summary: "getLikeCount"
+      description: "getLikeCount"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      - name: "likeType"
+        in: "query"
+        description: " COMMENT_LIKE :COMMENT_LIKE\nPOST_LIKE :POST_LIKE"
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "integer"
+    post:
+      summary: "changeLikeStatus"
+      description: "changeLikeStatus"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      - name: "likeType"
+        in: "query"
+        description: " COMMENT_LIKE :COMMENT_LIKE\nPOST_LIKE :POST_LIKE"
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: "No Content"
+  /post:
+    get:
+      summary: "getPostById"
+      description: "getPostById"
+      parameters:
+      - name: "postId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "string"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  postId:
+                    type: "string"
+                    description: ""
+                  userId:
+                    type: "integer"
+                    description: ""
+                  content:
+                    type: "string"
+                    description: ""
+                  location:
+                    type: "string"
+                    description: ""
+                  viewCount:
+                    type: "integer"
+                    description: ""
+                  likeCount:
+                    type: "integer"
+                    description: ""
+                  commentCount:
+                    type: "integer"
+                    description: ""
+                  postType:
+                    type: "string"
+                    description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                      \ TRADE=二手交易贴}"
+                    enum:
+                    - "REVIEW"
+                    - "LIFE_STYLE"
+                    - "LOST_AND_FOUND"
+                    - "TRADE"
+                  createdAt:
+                    type: "string"
+                    description: ""
+                  score:
+                    type: "number"
+                    description: ""
+                  cuisineId:
+                    type: "integer"
+                    description: ""
+                  merchantId:
+                    type: "integer"
+                    description: ""
+                  lostAndFoundType:
+                    type: "string"
+                    description: "{FOUND=FOUND, LOST=LOST}"
+                    enum:
+                    - "FOUND"
+                    - "LOST"
+  /user:
+    get:
+      summary: "getPostsByUserId"
+      description: "getPostsByUserId"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    commentCount:
+                      type: "integer"
+                      description: ""
+                    postType:
+                      type: "string"
+                      description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                        \ TRADE=二手交易贴}"
+                      enum:
+                      - "REVIEW"
+                      - "LIFE_STYLE"
+                      - "LOST_AND_FOUND"
+                      - "TRADE"
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    cuisineId:
+                      type: "integer"
+                      description: ""
+                    merchantId:
+                      type: "integer"
+                      description: ""
+                    lostAndFoundType:
+                      type: "string"
+                      description: "{FOUND=FOUND, LOST=LOST}"
+                      enum:
+                      - "FOUND"
+                      - "LOST"
+  /:
+    post:
+      summary: "saveOrUpdate"
+      description: "saveOrUpdate"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                postType:
+                  type: "string"
+                  description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                    \ TRADE=二手交易贴}"
+                  enum:
+                  - "REVIEW"
+                  - "LIFE_STYLE"
+                  - "LOST_AND_FOUND"
+                  - "TRADE"
+                postId:
+                  type: "string"
+                  description: ""
+                content:
+                  type: "string"
+                  description: ""
+                cuisineId:
+                  type: "integer"
+                  description: ""
+                merchantId:
+                  type: "integer"
+                  description: ""
+                lostAndFoundType:
+                  type: "string"
+                  description: "{FOUND=FOUND, LOST=LOST}"
+                  enum:
+                  - "FOUND"
+                  - "LOST"
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+    delete:
+      summary: "delPost"
+      description: "delPost"
+      parameters:
+      - name: "postId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: "No Content"
+  /page:
+    get:
+      summary: "getPostsByPage"
+      description: "getPostsByPage"
+      parameters:
+      - name: "from"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      - name: "pageSize"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      - name: "lostAndFoundType"
+        in: "query"
+        description: " FOUND :FOUND\nLOST :LOST"
+        required: false
+        schema:
+          type: "string"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    commentCount:
+                      type: "integer"
+                      description: ""
+                    postType:
+                      type: "string"
+                      description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                        \ TRADE=二手交易贴}"
+                      enum:
+                      - "REVIEW"
+                      - "LIFE_STYLE"
+                      - "LOST_AND_FOUND"
+                      - "TRADE"
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    cuisineId:
+                      type: "integer"
+                      description: ""
+                    merchantId:
+                      type: "integer"
+                      description: ""
+                    lostAndFoundType:
+                      type: "string"
+                      description: "{FOUND=FOUND, LOST=LOST}"
+                      enum:
+                      - "FOUND"
+                      - "LOST"
+  /search:
+    post:
+      summary: "searchPosts"
+      description: "searchPosts"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                keyword:
+                  type: "string"
+                  description: ""
+                postType:
+                  type: "string"
+                  description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                    \ TRADE=二手交易贴}"
+                  enum:
+                  - "REVIEW"
+                  - "LIFE_STYLE"
+                  - "LOST_AND_FOUND"
+                  - "TRADE"
+                lostAndFoundType:
+                  type: "string"
+                  description: "{FOUND=FOUND, LOST=LOST}"
+                  enum:
+                  - "FOUND"
+                  - "LOST"
+              description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    commentCount:
+                      type: "integer"
+                      description: ""
+                    postType:
+                      type: "string"
+                      description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                        \ TRADE=二手交易贴}"
+                      enum:
+                      - "REVIEW"
+                      - "LIFE_STYLE"
+                      - "LOST_AND_FOUND"
+                      - "TRADE"
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    cuisineId:
+                      type: "integer"
+                      description: ""
+                    merchantId:
+                      type: "integer"
+                      description: ""
+                    lostAndFoundType:
+                      type: "string"
+                      description: "{FOUND=FOUND, LOST=LOST}"
+                      enum:
+                      - "FOUND"
+                      - "LOST"
+  /homePage:
+    get:
+      summary: "getHomePage"
+      description: "getHomePage"
+      parameters:
+      - name: "from"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+          default: "0"
+      - name: "pageSize"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+          default: "10"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  posts:
+                    type: "array"
+                    description: ""
+                    items:
+                      type: "object"
+                      properties:
+                        post:
+                          type: "object"
+                          properties:
+                            postId:
+                              type: "string"
+                              description: ""
+                            userId:
+                              type: "integer"
+                              description: ""
+                            content:
+                              type: "string"
+                              description: ""
+                            location:
+                              type: "string"
+                              description: ""
+                            viewCount:
+                              type: "integer"
+                              description: ""
+                            likeCount:
+                              type: "integer"
+                              description: ""
+                            commentCount:
+                              type: "integer"
+                              description: ""
+                            postType:
+                              type: "string"
+                              description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE,\
+                                \ LOST_AND_FOUND=LOST_AND_FOUND, TRADE=二手交易贴}"
+                              enum:
+                              - "REVIEW"
+                              - "LIFE_STYLE"
+                              - "LOST_AND_FOUND"
+                              - "TRADE"
+                            createdAt:
+                              type: "string"
+                              description: ""
+                            score:
+                              type: "number"
+                              description: ""
+                            cuisineId:
+                              type: "integer"
+                              description: ""
+                            merchantId:
+                              type: "integer"
+                              description: ""
+                            lostAndFoundType:
+                              type: "string"
+                              description: "{FOUND=FOUND, LOST=LOST}"
+                              enum:
+                              - "FOUND"
+                              - "LOST"
+                          description: ""
+                        userInfo:
+                          type: "object"
+                          properties:
+                            userId:
+                              type: "integer"
+                              description: ""
+                            nickname:
+                              type: "string"
+                              description: ""
+                            avtarUrl:
+                              type: "string"
+                              description: ""
+                            introduction:
+                              type: "string"
+                              description: ""
+                            createAt:
+                              type: "string"
+                              description: ""
+                            birthday:
+                              type: "string"
+                              description: ""
+                            location:
+                              type: "string"
+                              description: ""
+                            postCount:
+                              type: "integer"
+                              description: ""
+                            viewCount:
+                              type: "integer"
+                              description: ""
+                            likesFavoritesCount:
+                              type: "integer"
+                              description: ""
+                          description: ""
+                        comments:
+                          type: "array"
+                          description: ""
+                          items:
+                            type: "object"
+                            properties:
+                              commentId:
+                                type: "integer"
+                                description: ""
+                              postId:
+                                type: "string"
+                                description: ""
+                              userId:
+                                type: "integer"
+                                description: ""
+                              content:
+                                type: "string"
+                                description: ""
+                              likeCount:
+                                type: "integer"
+                                description: ""
+                              createAt:
+                                type: "string"
+                                description: ""
+                              location:
+                                type: "string"
+                                description: ""
+                            description: "org.roni.ronitrouble.entity.Comment"
+                      description: "org.roni.ronitrouble.dto.vie.HomePageResp.PostDetail"
+  /comment:
+    get:
+      summary: "getComments"
+      description: "getComments"
+      parameters:
+      - name: "postId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "string"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    commentId:
+                      type: "integer"
+                      description: ""
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    createAt:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+    post:
+      summary: "saveComment"
+      description: "saveComment"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                postId:
+                  type: "string"
+                  description: ""
+                content:
+                  type: "string"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+    delete:
+      summary: "deleteComment"
+      description: "deleteComment"
+      parameters:
+      - name: "commentId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: "No Content"
+  /cuisine/cuisines:
+    get:
+      summary: "getCuisinesByMerchant"
+      description: "getCuisinesByMerchant"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    cuisineId:
+                      type: "integer"
+                      description: ""
+                    merchantId:
+                      type: "integer"
+                      description: ""
+                    avatarUrl:
+                      type: "string"
+                      description: ""
+                    cuisineName:
+                      type: "string"
+                      description: ""
+                    price:
+                      type: "number"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    introduce:
+                      type: "string"
+                      description: ""
+  /cuisine/update:
+    post:
+      summary: "addOrUpdateCuisine"
+      description: "addOrUpdateCuisine"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                cuisineId:
+                  type: "integer"
+                  description: ""
+                merchantId:
+                  type: "integer"
+                  description: ""
+                avatarUrl:
+                  type: "string"
+                  description: ""
+                cuisineName:
+                  type: "string"
+                  description: ""
+                price:
+                  type: "number"
+                  description: ""
+                score:
+                  type: "number"
+                  description: ""
+                introduce:
+                  type: "string"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /cuisine/delete:
+    delete:
+      summary: "deleteCuisine"
+      description: "deleteCuisine"
+      parameters:
+      - name: "cuisineId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: "No Content"
+  /merchant/page:
+    get:
+      summary: "getMerchantInfosByPage"
+      description: "getMerchantInfosByPage"
+      parameters:
+      - name: "start"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      - name: "pageSize"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    merchantId:
+                      type: "integer"
+                      description: "userid"
+                    name:
+                      type: "string"
+                      description: ""
+                    address:
+                      type: "string"
+                      description: ""
+                    phoneNumber:
+                      type: "string"
+                      description: ""
+                    avatarUrl:
+                      type: "string"
+                      description: ""
+                    bannerUrl:
+                      type: "string"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    startAt:
+                      type: "string"
+                      description: ""
+                    endAt:
+                      type: "string"
+                      description: ""
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    category:
+                      type: "string"
+                      description: "{RESTAURANT=RESTAURANT, COFFEE_TEA=COFFEE_TEA,\
+                        \ BBQ_GRILL=BBQ_GRILL, HOTPOT_WESTERN=HOTPOT_WESTERN}"
+                      enum:
+                      - "RESTAURANT"
+                      - "COFFEE_TEA"
+                      - "BBQ_GRILL"
+                      - "HOTPOT_WESTERN"
+  /merchant/merchantInfo:
+    get:
+      summary: "getMerchantInfoById"
+      description: "getMerchantInfoById"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  merchantId:
+                    type: "integer"
+                    description: "userid"
+                  name:
+                    type: "string"
+                    description: ""
+                  address:
+                    type: "string"
+                    description: ""
+                  phoneNumber:
+                    type: "string"
+                    description: ""
+                  avatarUrl:
+                    type: "string"
+                    description: ""
+                  bannerUrl:
+                    type: "string"
+                    description: ""
+                  score:
+                    type: "number"
+                    description: ""
+                  startAt:
+                    type: "string"
+                    description: ""
+                  endAt:
+                    type: "string"
+                    description: ""
+                  createdAt:
+                    type: "string"
+                    description: ""
+                  category:
+                    type: "string"
+                    description: "{RESTAURANT=RESTAURANT, COFFEE_TEA=COFFEE_TEA, BBQ_GRILL=BBQ_GRILL,\
+                      \ HOTPOT_WESTERN=HOTPOT_WESTERN}"
+                    enum:
+                    - "RESTAURANT"
+                    - "COFFEE_TEA"
+                    - "BBQ_GRILL"
+                    - "HOTPOT_WESTERN"
+  /merchant/update:
+    post:
+      summary: "addOrUpdateMerchantInfoById"
+      description: "addOrUpdateMerchantInfoById"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                merchantId:
+                  type: "integer"
+                  description: "userid"
+                name:
+                  type: "string"
+                  description: ""
+                address:
+                  type: "string"
+                  description: ""
+                phoneNumber:
+                  type: "string"
+                  description: ""
+                avatarUrl:
+                  type: "string"
+                  description: ""
+                bannerUrl:
+                  type: "string"
+                  description: ""
+                score:
+                  type: "number"
+                  description: ""
+                startAt:
+                  type: "string"
+                  description: ""
+                endAt:
+                  type: "string"
+                  description: ""
+                createdAt:
+                  type: "string"
+                  description: ""
+                category:
+                  type: "string"
+                  description: "{RESTAURANT=RESTAURANT, COFFEE_TEA=COFFEE_TEA, BBQ_GRILL=BBQ_GRILL,\
+                    \ HOTPOT_WESTERN=HOTPOT_WESTERN}"
+                  enum:
+                  - "RESTAURANT"
+                  - "COFFEE_TEA"
+                  - "BBQ_GRILL"
+                  - "HOTPOT_WESTERN"
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /merchant/delete:
+    delete:
+      summary: "deleteMerchantById"
+      description: "deleteMerchantById"
+      parameters:
+      - name: "merchantId"
+        in: "query"
+        description: ""
+        required: true
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: "No Content"
+  /userInfo:
+    get:
+      summary: "getUserInfo"
+      description: "getUserInfo"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  userId:
+                    type: "integer"
+                    description: ""
+                  nickname:
+                    type: "string"
+                    description: ""
+                  avtarUrl:
+                    type: "string"
+                    description: ""
+                  introduction:
+                    type: "string"
+                    description: ""
+                  createAt:
+                    type: "string"
+                    description: ""
+                  birthday:
+                    type: "string"
+                    description: ""
+                  location:
+                    type: "string"
+                    description: ""
+                  postCount:
+                    type: "integer"
+                    description: ""
+                  viewCount:
+                    type: "integer"
+                    description: ""
+                  likesFavoritesCount:
+                    type: "integer"
+                    description: ""
+    post:
+      summary: "addOrUpdateUserInfo"
+      description: "addOrUpdateUserInfo"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                userId:
+                  type: "integer"
+                  description: ""
+                nickname:
+                  type: "string"
+                  description: ""
+                avtarUrl:
+                  type: "string"
+                  description: ""
+                introduction:
+                  type: "string"
+                  description: ""
+                createAt:
+                  type: "string"
+                  description: ""
+                birthday:
+                  type: "string"
+                  description: ""
+                location:
+                  type: "string"
+                  description: ""
+                postCount:
+                  type: "integer"
+                  description: ""
+                viewCount:
+                  type: "integer"
+                  description: ""
+                likesFavoritesCount:
+                  type: "integer"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /userInfo/isExisted:
+    get:
+      summary: "isUserInfoByIdExisted"
+      description: "isUserInfoByIdExisted"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "boolean"
+  /userInfo/posts:
+    get:
+      summary: "getUserPosts"
+      description: "getUserPosts"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    commentCount:
+                      type: "integer"
+                      description: ""
+                    postType:
+                      type: "string"
+                      description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                        \ TRADE=二手交易贴}"
+                      enum:
+                      - "REVIEW"
+                      - "LIFE_STYLE"
+                      - "LOST_AND_FOUND"
+                      - "TRADE"
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    cuisineId:
+                      type: "integer"
+                      description: ""
+                    merchantId:
+                      type: "integer"
+                      description: ""
+                    lostAndFoundType:
+                      type: "string"
+                      description: "{FOUND=FOUND, LOST=LOST}"
+                      enum:
+                      - "FOUND"
+                      - "LOST"
+  /userInfo/comments:
+    get:
+      summary: "getUserComments"
+      description: "getUserComments"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    commentId:
+                      type: "integer"
+                      description: ""
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    createAt:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+  /userInfo/likedPosts:
+    get:
+      summary: "getUserLikedPosts"
+      description: "getUserLikedPosts"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    postId:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likeCount:
+                      type: "integer"
+                      description: ""
+                    commentCount:
+                      type: "integer"
+                      description: ""
+                    postType:
+                      type: "string"
+                      description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                        \ TRADE=二手交易贴}"
+                      enum:
+                      - "REVIEW"
+                      - "LIFE_STYLE"
+                      - "LOST_AND_FOUND"
+                      - "TRADE"
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    score:
+                      type: "number"
+                      description: ""
+                    cuisineId:
+                      type: "integer"
+                      description: ""
+                    merchantId:
+                      type: "integer"
+                      description: ""
+                    lostAndFoundType:
+                      type: "string"
+                      description: "{FOUND=FOUND, LOST=LOST}"
+                      enum:
+                      - "FOUND"
+                      - "LOST"
+  /userInfo/postCount:
+    get:
+      summary: "getUserPostCount"
+      description: "getUserPostCount"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "integer"
+  /userInfo/viewCount:
+    get:
+      summary: "getUserViewCount"
+      description: "getUserViewCount"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "integer"
+  /userInfo/likeCount:
+    get:
+      summary: "getUserLikeCount"
+      description: "getUserLikeCount"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "integer"
+  /userCredential/login:
+    post:
+      summary: "login"
+      description: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                email:
+                  type: "string"
+                  description: ""
+                password:
+                  type: "string"
+                  description: ""
+                keepSignedInFor7Days:
+                  type: "boolean"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+                    description: ""
+                  email:
+                    type: "string"
+                    description: ""
+                  role:
+                    type: "string"
+                    description: "{STUDENT=STUDENT, MERCHANT=MERCHANT}"
+                    enum:
+                    - "STUDENT"
+                    - "MERCHANT"
+  /userCredential/register:
+    post:
+      summary: "register"
+      description: "register"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                email:
+                  type: "string"
+                  description: ""
+                password:
+                  type: "string"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /userCredential/register/student:
+    post:
+      summary: "registerStudent"
+      description: "registerStudent"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                email:
+                  type: "string"
+                  description: ""
+                password:
+                  type: "string"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /userCredential/register/merchant:
+    post:
+      summary: "registerMerchant"
+      description: "registerMerchant"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                email:
+                  type: "string"
+                  description: ""
+                password:
+                  type: "string"
+                  description: ""
+                name:
+                  type: "string"
+                  description: ""
+                address:
+                  type: "string"
+                  description: ""
+                phoneNumber:
+                  type: "string"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+components:
+  schemas:
+    org.roni.ronitrouble.entity.Post:
+      type: "object"
+      properties:
+        postId:
+          type: "string"
+          description: ""
+        userId:
+          type: "integer"
+          description: ""
+        content:
+          type: "string"
+          description: ""
+        location:
+          type: "string"
+          description: ""
+        viewCount:
+          type: "integer"
+          description: ""
+        likeCount:
+          type: "integer"
+          description: ""
+        commentCount:
+          type: "integer"
+          description: ""
+        postType:
+          type: "string"
+          description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+            \ TRADE=二手交易贴}"
+          enum:
+          - "REVIEW"
+          - "LIFE_STYLE"
+          - "LOST_AND_FOUND"
+          - "TRADE"
+        createdAt:
+          type: "string"
+          description: ""
+        score:
+          type: "number"
+          description: ""
+        cuisineId:
+          type: "integer"
+          description: ""
+        merchantId:
+          type: "integer"
+          description: ""
+        lostAndFoundType:
+          type: "string"
+          description: "{FOUND=FOUND, LOST=LOST}"
+          enum:
+          - "FOUND"
+          - "LOST"
+      description: ""
+    org.roni.ronitrouble.entity.UserInfo:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          description: ""
+        nickname:
+          type: "string"
+          description: ""
+        avtarUrl:
+          type: "string"
+          description: ""
+        introduction:
+          type: "string"
+          description: ""
+        createAt:
+          type: "string"
+          description: ""
+        birthday:
+          type: "string"
+          description: ""
+        location:
+          type: "string"
+          description: ""
+        postCount:
+          type: "integer"
+          description: ""
+        viewCount:
+          type: "integer"
+          description: ""
+        likesFavoritesCount:
+          type: "integer"
+          description: ""
+      description: ""
+    org.roni.ronitrouble.entity.Comment:
+      type: "object"
+      properties:
+        commentId:
+          type: "integer"
+          description: ""
+        postId:
+          type: "string"
+          description: ""
+        userId:
+          type: "integer"
+          description: ""
+        content:
+          type: "string"
+          description: ""
+        likeCount:
+          type: "integer"
+          description: ""
+        createAt:
+          type: "string"
+          description: ""
+        location:
+          type: "string"
+          description: ""
+      description: "org.roni.ronitrouble.entity.Comment"
+    org.roni.ronitrouble.dto.vie.HomePageResp.PostDetail:
+      type: "object"
+      properties:
+        post:
+          type: "object"
+          properties:
+            postId:
+              type: "string"
+              description: ""
+            userId:
+              type: "integer"
+              description: ""
+            content:
+              type: "string"
+              description: ""
+            location:
+              type: "string"
+              description: ""
+            viewCount:
+              type: "integer"
+              description: ""
+            likeCount:
+              type: "integer"
+              description: ""
+            commentCount:
+              type: "integer"
+              description: ""
+            postType:
+              type: "string"
+              description: "{REVIEW=REVIEW, LIFE_STYLE=LIFE_STYLE, LOST_AND_FOUND=LOST_AND_FOUND,\
+                \ TRADE=二手交易贴}"
+              enum:
+              - "REVIEW"
+              - "LIFE_STYLE"
+              - "LOST_AND_FOUND"
+              - "TRADE"
+            createdAt:
+              type: "string"
+              description: ""
+            score:
+              type: "number"
+              description: ""
+            cuisineId:
+              type: "integer"
+              description: ""
+            merchantId:
+              type: "integer"
+              description: ""
+            lostAndFoundType:
+              type: "string"
+              description: "{FOUND=FOUND, LOST=LOST}"
+              enum:
+              - "FOUND"
+              - "LOST"
+          description: ""
+        userInfo:
+          type: "object"
+          properties:
+            userId:
+              type: "integer"
+              description: ""
+            nickname:
+              type: "string"
+              description: ""
+            avtarUrl:
+              type: "string"
+              description: ""
+            introduction:
+              type: "string"
+              description: ""
+            createAt:
+              type: "string"
+              description: ""
+            birthday:
+              type: "string"
+              description: ""
+            location:
+              type: "string"
+              description: ""
+            postCount:
+              type: "integer"
+              description: ""
+            viewCount:
+              type: "integer"
+              description: ""
+            likesFavoritesCount:
+              type: "integer"
+              description: ""
+          description: ""
+        comments:
+          type: "array"
+          description: ""
+          items:
+            type: "object"
+            properties:
+              commentId:
+                type: "integer"
+                description: ""
+              postId:
+                type: "string"
+                description: ""
+              userId:
+                type: "integer"
+                description: ""
+              content:
+                type: "string"
+                description: ""
+              likeCount:
+                type: "integer"
+                description: ""
+              createAt:
+                type: "string"
+                description: ""
+              location:
+                type: "string"
+                description: ""
+            description: "org.roni.ronitrouble.entity.Comment"
+      description: "org.roni.ronitrouble.dto.vie.HomePageResp.PostDetail"

@@ -112,11 +112,12 @@
 	}
 
 	async function loadUserData() {
+		const userId = uni.getStorageSync('user_id')
 		const [infoRes, postsRes, commentsRes, likesRes] = await Promise.allSettled([
 			userApi.getUserInfo(),
-			userApi.getUserPosts(),
-			userApi.getUserComments(),
-			userApi.getUserLikedPosts()
+			userApi.getUserPosts(userId),
+			userApi.getUserComments(userId),
+			userApi.getUserLikedPosts(userId)
 		])
 
 		if (infoRes.status === 'fulfilled') {
