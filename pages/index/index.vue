@@ -22,15 +22,21 @@ const mode = ref('login')
 const account = ref('')
 const password = ref('')
 const confirmPwd = ref('')
-const showPwd = ref(false)
-const showPwd2 = ref(false)
 const loading = ref(false)
+<<<<<<< HEAD
 const gender = ref('boy')
+=======
+const gender = ref('')
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 
 const genderOptions = [
 	{ value: 'boy', label: '我是男生', icon: '/static/register/boy.png' },
 	{ value: 'girl', label: '我是女生', icon: '/static/register/girl.png' }
 ]
+const genderLabelMap = {
+	boy: '男',
+	girl: '女'
+}
 
 const titleText = computed(() => (mode.value === 'login' ? '您好，欢迎登录！' : '您好，欢迎注册！'))
 const btnText = computed(() => (mode.value === 'login' ? '登录' : '注册'))
@@ -45,7 +51,8 @@ const canSubmit = computed(() => {
 			account.value.trim().length >= 3 &&
 			password.value.trim().length >= 6 &&
 			confirmPwd.value.trim().length >= 6 &&
-			password.value === confirmPwd.value
+			password.value === confirmPwd.value &&
+			!!gender.value
 		)
 	}
 })
@@ -55,7 +62,9 @@ function goPost() {
 }
 
 function goEdit() {
-	uni.redirectTo({ url: '/pages/edit/edit' })
+	const registerGender = uni.getStorageSync('register_gender')
+	const query = registerGender ? `?gender=${encodeURIComponent(registerGender)}` : ''
+	uni.redirectTo({ url: `/pages/edit/edit${query}` })
 }
 
 async function routeAfterLogin() {
@@ -106,6 +115,11 @@ async function onSubmit() {
 					title: '两次密码不一致',
 					icon: 'none'
 				})
+			} else if (!gender.value) {
+				uni.showToast({
+					title: '请选择性别',
+					icon: 'none'
+				})
 			} else {
 				uni.showToast({
 					title: '请完善信息',
@@ -126,7 +140,10 @@ async function onSubmit() {
 			)
 			uni.setStorageSync('token', res.token)
 			uni.setStorageSync('email', res.email)
+<<<<<<< HEAD
 			uni.setStorageSync('gender', res.gender)
+=======
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 			const loginUserId = res.userId ?? res.userID ?? res.id
 			if (loginUserId !== undefined && loginUserId !== null && loginUserId !== '') {
 				uni.setStorageSync('user_id', String(loginUserId))
@@ -137,12 +154,19 @@ async function onSubmit() {
 			})
 			setTimeout(() => routeAfterLogin(), 250)
 		} else {
+<<<<<<< HEAD
 			if (gender.value === 'student') {
 				await authApi.registerStudent(account.value, password.value)
 			} else if (gender.value === 'merchant') {
 				await authApi.registerMerchant(account.value, password.value, '', '', '')
+=======
+			await authApi.register(account.value, password.value)
+			const registerGender = genderLabelMap[gender.value] || ''
+			if (registerGender) {
+				uni.setStorageSync('register_gender', registerGender)
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 			} else {
-				await authApi.register(account.value, password.value)
+				uni.removeStorageSync('register_gender')
 			}
 			uni.showToast({
 				title: '注册成功，请登录',
@@ -179,7 +203,11 @@ async function onSubmit() {
 				<text class="title">{{ titleText }}</text>
 
 				<view v-if="mode === 'register'" class="gender-section">
+<<<<<<< HEAD
 					<text class="gender-title">请选择身份</text>
+=======
+					<text class="gender-title">请选择性别</text>
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 					<view class="gender-list">
 						<view v-for="r in genderOptions" :key="r.value" class="gender-item"
 							:class="{ active: gender === r.value }" @tap="selectGender(r.value)">
@@ -195,12 +223,12 @@ async function onSubmit() {
 				</view>
 
 				<view class="input-wrap">
-					<input class="input" v-model="password" :password="!showPwd"
+					<input class="input" v-model="password" password
 						:placeholder="mode === 'login' ? '请输入密码' : '请填写您的密码（至少6位）'" placeholder-class="ph" />
 				</view>
 
 				<view v-if="mode === 'register'" class="input-wrap">
-					<input class="input" v-model="confirmPwd" :password="!showPwd2" placeholder="确认密码"
+					<input class="input" v-model="confirmPwd" password placeholder="确认密码"
 						placeholder-class="ph" />
 				</view>
 

@@ -10,8 +10,15 @@
 	import {
 		postApi
 	} from "@/api/post.js";
+	import {
+		POST_TABS
+	} from "@/utils/postTabs.js";
 
+<<<<<<< HEAD
 	const tabs = ref(["全部", "热门", "生活分享", "美食推荐", "失物招领", "闲置交易"]);
+=======
+	const tabs = ref([...POST_TABS]);
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 	const tabTypeMap = {
 		生活分享: "LIFE_STYLE",
 		美食推荐: "REVIEW",
@@ -104,6 +111,12 @@
 	function normalizePost(item) {
 		const post = item?.post ?? item ?? {};
 		const postId = item?.postId ?? post?.postId ?? post?.id ?? item?.id;
+		const rawUserInfo = item?.userInfo ?? item?.user ?? post?.user ?? item?.author ?? post?.author ?? {};
+		const normalizedUserInfo = {
+			...rawUserInfo,
+			avatarUrl: rawUserInfo?.avatarUrl ?? rawUserInfo?.avtarUrl ?? rawUserInfo?.avatar ?? '',
+			nickname: rawUserInfo?.nickname ?? rawUserInfo?.name ?? ''
+		};
 		const replyList = (item?.replyList ?? post?.replyList ?? item?.commentList ?? []).map((r) => ({
 			...r,
 			user: r?.user ?? r?.author ?? {},
@@ -116,7 +129,8 @@
 			id: item?.id ?? postId,
 			postId,
 			postType: item?.postType ?? post?.postType,
-			user: item?.user ?? post?.user ?? item?.author ?? post?.author ?? {},
+			user: normalizedUserInfo,
+			userInfo: normalizedUserInfo,
 			content: item?.content ?? post?.content ?? '',
 			images: item?.images ?? post?.images ?? post?.imageList ?? post?.imageUrls ?? [],
 			time: item?.time ?? post?.time ?? post?.createTime ?? post?.createdAt ?? '',
@@ -277,25 +291,46 @@
 	}
 
 	async function toggleLike(postItem) {
+		const postId = postItem?.postId ?? postItem?.post?.postId;
+		if (!postId || postItem?.likePending) return;
+		postItem.likePending = true;
+		const wasLiked = Boolean(postItem?.liked ?? postItem?.post?.liked);
+		applyLikeState(postItem, !wasLiked);
 		try {
-			const postId = postItem.postId ?? postItem.post?.postId;
-			if (!postId) return;
-			await postApi.changeLikeStatus(
-				postId,
-				'POST_LIKE'
-			);
-			if (typeof postItem.likes === 'number') postItem.likes += 1;
-			if (postItem.post && typeof postItem.post.likeCount === 'number') {
-				postItem.post.likeCount += 1;
-			}
-			postItem.liked = true;
+			await postApi.changeLikeStatus(postId, 'POST_LIKE');
 			uni.showToast({
-				title: '点赞成功',
-				icon: 'success'
+				title: wasLiked ? '已取消点赞' : '点赞成功',
+				icon: wasLiked ? 'none' : 'success'
 			});
 		} catch (error) {
+			applyLikeState(postItem, wasLiked);
 			console.error('点赞失败:', error);
+			uni.showToast({
+				title: '点赞失败',
+				icon: 'none'
+			});
+		} finally {
+			postItem.likePending = false;
 		}
+	}
+
+	function resolveLikeCount(postItem) {
+		const raw = postItem?.post?.likeCount ?? postItem?.likes ?? 0;
+		const num = Number(raw);
+		return Number.isFinite(num) ? num : 0;
+	}
+
+	function applyLikeState(postItem, nextLiked) {
+		if (!postItem) return;
+		const currentLiked = Boolean(postItem.liked ?? postItem.post?.liked);
+		if (currentLiked !== nextLiked) {
+			const delta = nextLiked ? 1 : -1;
+			const nextCount = Math.max(0, resolveLikeCount(postItem) + delta);
+			if (postItem.post) postItem.post.likeCount = nextCount;
+			postItem.likes = nextCount;
+		}
+		postItem.liked = nextLiked;
+		if (postItem.post) postItem.post.liked = nextLiked;
 	}
 
 	function openComments(postItem) {
@@ -378,10 +413,9 @@
 
 						<view class="actions">
 							<view class="act" @click="toggleLike(postItem)">
-								<!-- <image class="act-icon" :class="{ liked: post.liked }"
-									:src="post.liked ? '/static/component/like-active.png' : '/static/component/like.png'"
-									mode="aspectFit" /> -->
-								<image class="act-icon" src="/static/component/like-active.png" mode="aspectFit" />
+								<image class="act-icon"
+									:src="(postItem.liked || postItem.post?.liked) ? '/static/component/like-active.png' : '/static/component/like.png'"
+									mode="aspectFit" />
 								<text class="act-num">{{ postItem.post.likeCount || 0 }}</text>
 							</view>
 

@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 	<view class="page">
 		<view class="custom-navbar">
 			<view class="navbar-content">
@@ -30,10 +31,15 @@
 				</view>
 			</view>
 		</view>
+=======
+	<view>
+		
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 	</view>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 	import {
 		ref,
 		reactive
@@ -291,3 +297,11 @@
 		line-height: 1;
 	}
 </style>
+=======
+	
+</script>
+
+<style>
+	       
+</style>
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2

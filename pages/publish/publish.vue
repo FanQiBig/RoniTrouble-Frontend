@@ -11,7 +11,11 @@
 	const statusBarH = ref(0)
 	const safeBottom = ref(0)
 
+<<<<<<< HEAD
 	const tabs = ref(["全部", "美食", "失物招领", "闲置推荐"])
+=======
+	const tabs = ref(["日常分享", "美食", "失物招领", "闲置推荐"])
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 
 	// 存用户选中的分类（默认不选：-1）
 	const selectedTabIndex = ref(-1)
@@ -21,7 +25,11 @@
 	})
 
 	const postTypeMap = {
+<<<<<<< HEAD
 		"生活分享": "LIFE_STYLE",
+=======
+		"日常分享": "LIFE_STYLE",
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
 		"美食推荐": "REVIEW",
 		"失物招领": "LOST_AND_FOUND",
 		"闲置交易": "TRADE"

@@ -569,6 +569,12 @@ paths:
                             postCount:
                               type: "integer"
                               description: ""
+                            gender:
+                              type: "string"
+                              description: "{MALE=MALE, FEMALE=FEMALE}"
+                              enum:
+                              - "MALE"
+                              - "FEMALE"
                             viewCount:
                               type: "integer"
                               description: ""
@@ -1085,7 +1091,11 @@ paths:
                     midForUser:
                       type: "integer"
                       description: ""
+<<<<<<< HEAD
   /userInfo/me:
+=======
+  /userInfo:
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
     get:
       summary: "getMyUserInfo"
       description: "getMyUserInfo"
@@ -1135,6 +1145,12 @@ paths:
                   postCount:
                     type: "integer"
                     description: ""
+                  gender:
+                    type: "string"
+                    description: "{MALE=MALE, FEMALE=FEMALE}"
+                    enum:
+                    - "MALE"
+                    - "FEMALE"
                   viewCount:
                     type: "integer"
                     description: ""
@@ -1208,6 +1224,12 @@ paths:
                 postCount:
                   type: "integer"
                   description: ""
+                gender:
+                  type: "string"
+                  description: "{MALE=MALE, FEMALE=FEMALE}"
+                  enum:
+                  - "MALE"
+                  - "FEMALE"
                 viewCount:
                   type: "integer"
                   description: ""
@@ -1509,15 +1531,24 @@ paths:
                     location:
                       type: "string"
                       description: ""
+<<<<<<< HEAD
+=======
+                    postCount:
+                      type: "integer"
+                      description: ""
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
                     gender:
                       type: "string"
                       description: "{MALE=MALE, FEMALE=FEMALE}"
                       enum:
                       - "MALE"
                       - "FEMALE"
+<<<<<<< HEAD
                     postCount:
                       type: "integer"
                       description: ""
+=======
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
                     viewCount:
                       type: "integer"
                       description: ""
@@ -1667,15 +1698,24 @@ paths:
                     location:
                       type: "string"
                       description: ""
+<<<<<<< HEAD
+=======
+                    postCount:
+                      type: "integer"
+                      description: ""
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
                     gender:
                       type: "string"
                       description: "{MALE=MALE, FEMALE=FEMALE}"
                       enum:
                       - "MALE"
                       - "FEMALE"
+<<<<<<< HEAD
                     postCount:
                       type: "integer"
                       description: ""
+=======
+>>>>>>> 75c61f11970c2c6b423da1f6167291da243695d2
                     viewCount:
                       type: "integer"
                       description: ""
@@ -1816,6 +1856,12 @@ components:
         postCount:
           type: "integer"
           description: ""
+        gender:
+          type: "string"
+          description: "{MALE=MALE, FEMALE=FEMALE}"
+          enum:
+          - "MALE"
+          - "FEMALE"
         viewCount:
           type: "integer"
           description: ""
@@ -1926,6 +1972,12 @@ components:
             postCount:
               type: "integer"
               description: ""
+            gender:
+              type: "string"
+              description: "{MALE=MALE, FEMALE=FEMALE}"
+              enum:
+              - "MALE"
+              - "FEMALE"
             viewCount:
               type: "integer"
               description: ""

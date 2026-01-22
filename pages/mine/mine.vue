@@ -7,6 +7,10 @@
 	import {
 		userApi
 	} from '@/api/user.js'
+	import {
+		DEFAULT_POST_LABEL,
+		resolvePostTypeLabel
+	} from '@/utils/postTabs.js'
 
 	const statusBarH = ref(0)
 	const safeBottom = ref(0)
@@ -17,7 +21,9 @@
 		safeBottom.value = sys.safeAreaInsets?.bottom || 0
 		await loadUserData()
 	})
-	
+
+	const fallbackAvatar = '/static/component/mine.png'
+
 	const userInfo = ref({
 		userId: '',
 		nickname: '',
@@ -26,6 +32,7 @@
 		createAt: '',
 		birthday: '',
 		location: '',
+		gender: '',
 		postCount: 0,
 		viewCount: 0,
 		likesFavoritesCount: 0
@@ -40,7 +47,34 @@
 		return a > 0 ? a : ''
 	})
 
-	const gender = ref('♂') // 纯展示：你也可以改成 '♂'
+	const genderLabelMap = {
+		boy: '男',
+		girl: '女',
+		MALE: '男',
+		FEMALE: '女',
+		男: '男',
+		女: '女',
+		'♂': '男',
+		'♀': '女'
+	}
+
+	function normalizeGenderLabel(value) {
+		if (value === undefined || value === null) return ''
+		const raw = typeof value === 'string' ? value.trim() : String(value)
+		return genderLabelMap[raw] || ''
+	}
+
+	const genderMeta = computed(() => {
+		const raw = userInfo.value.gender ?? userInfo.value.sex ?? ''
+		const label = normalizeGenderLabel(raw)
+		if (label === '男') {
+			return { symbol: '♂', className: 'male' }
+		}
+		if (label === '女') {
+			return { symbol: '♀', className: 'female' }
+		}
+		return { symbol: '', className: 'unknown' }
+	})
 
 	const tabs = ref([{
 			key: 'note',
@@ -63,6 +97,7 @@
 	const listComment = ref([])
 	const listNote = ref([])
 	const listLike = ref([])
+	const defaultFromLabel = `${DEFAULT_POST_LABEL}`
 
 	function formatTitle(text = '') {
 		const raw = String(text || '').trim()
@@ -70,45 +105,118 @@
 		return raw.length > 24 ? `${raw.slice(0, 24)}...` : raw
 	}
 
+	function resolveAvatarUrl(data = {}) {
+		const raw = data.avatarUrl ??
+			data.avtarUrl ??
+			data.avatar ??
+			data.avatarURL ??
+			data.avatar_url ??
+			data.avtar_url ??
+			''
+		const text = typeof raw === 'string' ? raw.trim() : ''
+		return text || fallbackAvatar
+	}
+
 	function normalizeUserInfo(data = {}) {
 		return {
 			userId: data.userId ?? '',
-			nickname: data.nickname ?? '',
-			avatarUrl: data.avatarUrl ?? data.avtarUrl ?? '',
+			nickname: data.nickname ?? data.name ?? '',
+			avatarUrl: resolveAvatarUrl(data),
 			introduction: data.introduction ?? '',
 			createAt: data.createAt ?? '',
 			birthday: data.birthday ?? '',
 			location: data.location ?? '',
+			gender: data.gender ?? data.sex ?? '',
 			postCount: data.postCount ?? 0,
 			viewCount: data.viewCount ?? 0,
 			likesFavoritesCount: data.likesFavoritesCount ?? 0
 		}
 	}
 
+	function resolvePostTypeValue(item = {}) {
+		return item.postType ??
+			item.post?.postType ??
+			item.type ??
+			item.category ??
+			item.postCategory ??
+			item.postTypeName ??
+			''
+	}
+
+	function buildFromLabel(value) {
+		const label = resolvePostTypeLabel(value)
+		return label ? `${label}` : ''
+	}
+
 	function mapPostItem(post = {}, index = 0) {
+		const postTypeValue = resolvePostTypeValue(post)
 		return {
 			id: post.postId ?? post.id ?? `${index}-${post.createdAt || ''}`,
 			title: formatTitle(post.content),
 			snippet: '',
-			from: '来自帖子 · 日常分享',
+			from: buildFromLabel(postTypeValue),
 			time: post.createdAt ?? '',
 			place: post.location ?? '',
-			publicText: '设为公开',
 			liked: false
 		}
 	}
 
 	function mapCommentItem(comment = {}, index = 0) {
+		const postTypeValue = resolvePostTypeValue(comment)
 		return {
 			id: comment.commentId ?? comment.id ?? `${index}-${comment.createAt || ''}`,
 			title: formatTitle(comment.content),
 			snippet: comment.content ?? '',
-			from: comment.postId ? `来自帖子 · ${comment.postId}` : '来自帖子',
+			from: buildFromLabel(postTypeValue),
 			time: comment.createAt ?? '',
 			place: comment.location ?? '',
-			publicText: '设为公开',
 			liked: false
 		}
+	}
+
+	function parseDate(value) {
+		if (!value) return null
+		if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value
+		if (typeof value === 'number') {
+			const date = new Date(value)
+			return Number.isNaN(date.getTime()) ? null : date
+		}
+		const raw = String(value).trim()
+		if (!raw) return null
+		let normalized = raw
+		if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(raw)) {
+			normalized = raw.replace(' ', 'T')
+		}
+		const date = new Date(normalized)
+		return Number.isNaN(date.getTime()) ? null : date
+	}
+
+	function pad2(num) {
+		return String(num).padStart(2, '0')
+	}
+
+	function formatDisplayTime(value) {
+		const date = parseDate(value)
+		if (!date) return String(value || '')
+		const now = new Date()
+		const sameYear = date.getFullYear() === now.getFullYear()
+		const sameDay = sameYear &&
+			date.getMonth() === now.getMonth() &&
+			date.getDate() === now.getDate()
+		if (sameDay) {
+			return `${date.getHours()}:${pad2(date.getMinutes())}`
+		}
+		if (sameYear) {
+			return `${date.getMonth() + 1}-${date.getDate()}`
+		}
+		return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+	}
+
+	function formatTimePlace(time, place) {
+		const timeLabel = formatDisplayTime(time)
+		const placeLabel = place ? String(place).trim() : ''
+		if (timeLabel && placeLabel) return `${timeLabel} · ${placeLabel}`
+		return timeLabel || placeLabel
 	}
 
 	async function loadUserData() {
@@ -141,7 +249,9 @@
 	}
 
 	function goBack() {
-		uni.navigateBack()
+		uni.switchTab({
+			url: '/pages/post/post'
+		})
 	}
 
 	function editProfile() {
@@ -207,7 +317,7 @@
 			<!-- 标签 -->
 			<view class="chips">
 				<view class="chip">
-					<text class="chip-ico">{{ gender }}</text>
+					<text class="chip-ico" :class="genderMeta.className">{{ genderMeta.symbol }}</text>
 					<text class="chip-txt">{{ age }}岁</text>
 				</view>
 				<view class="chip">
@@ -262,21 +372,15 @@
 							<text v-if="item.snippet" class="cell-snippet">
 								{{ item.snippet }}
 							</text>
-
 							<view class="cell-meta">
-								<text class="m">{{ item.from || '来自帖子 · 日常分享' }}</text>
+								<text class="m">{{ formatTimePlace(item.time, item.place) }}</text>
+								<text class="m"> · {{ item.from || defaultFromLabel }}</text>
 							</view>
-							<view class="cell-meta">
-								<text class="m">{{ item.time }} {{ item.place }}</text>
-								<text class="m"> · </text>
-								<text class="m">{{ item.publicText || '设为公开' }}</text>
-							</view>
-						</view>
-
-						<view class="cell-right" @tap="toggleLike(item)">
-							<text class="heart" :class="{ on: item.liked }">♡</text>
 						</view>
 					</view>
+				</view>
+				<view v-if="currentList.length > 0" class="no-more">
+					<text class="no-more-text">没有更多了</text>
 				</view>
 			</view>
 
@@ -289,6 +393,8 @@
 	.page {
 		min-height: 100vh;
 		background: #f3f5f7;
+		display: flex;
+		flex-direction: column;
 	}
 
 	/* 顶部灰色区域 */
@@ -432,6 +538,18 @@
 		font-weight: 900;
 	}
 
+	.chip-ico.male {
+		color: #4da6ff;
+	}
+
+	.chip-ico.female {
+		color: #ff6ea6;
+	}
+
+	.chip-ico.unknown {
+		color: rgba(255, 255, 255, 0.65);
+	}
+
 	.chip-txt {
 		color: rgba(255, 255, 255, 0.88);
 		font-size: 26rpx;
@@ -494,6 +612,9 @@
 		border-top-right-radius: 30rpx;
 		overflow: hidden;
 		padding-bottom: 10rpx;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
 	}
 
 	/* tabs */
@@ -564,14 +685,14 @@
 		padding: 18rpx 22rpx;
 		display: flex;
 		gap: 14rpx;
-		border-bottom: 1px solid #f6f6f6;
+		border-bottom: 1px solid #d5d5d5;
 	}
 
 	.cell-av {
 		width: 84rpx;
 		height: 84rpx;
-		border-radius: 20rpx;
-		background: #f2f2f2;
+		border-radius: 16rpx;
+		background: #151515;
 		flex-shrink: 0;
 	}
 
@@ -614,22 +735,6 @@
 		color: #999;
 	}
 
-	.cell-right {
-		width: 70rpx;
-		display: flex;
-		justify-content: flex-end;
-		padding-top: 16rpx;
-	}
-
-	.heart {
-		font-size: 44rpx;
-		color: #cfcfcf;
-	}
-
-	.heart.on {
-		color: #ff2e55;
-	}
-
 	.empty {
 		padding: 80rpx 22rpx;
 		display: flex;
@@ -639,5 +744,16 @@
 	.empty-text {
 		color: #aaa;
 		font-size: 26rpx;
+	}
+
+	.no-more {
+		padding: 16rpx 0 26rpx;
+		display: flex;
+		justify-content: center;
+	}
+
+	.no-more-text {
+		color: #b0b0b0;
+		font-size: 24rpx;
 	}
 </style>
