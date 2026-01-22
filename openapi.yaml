@@ -183,24 +183,14 @@ paths:
                     - "LIFE_STYLE"
                     - "LOST_AND_FOUND"
                     - "TRADE"
+                  imageUrls:
+                    type: "array"
+                    description: ""
+                    items:
+                      type: "string"
                   createdAt:
                     type: "string"
                     description: ""
-                  score:
-                    type: "number"
-                    description: ""
-                  cuisineId:
-                    type: "integer"
-                    description: ""
-                  merchantId:
-                    type: "integer"
-                    description: ""
-                  lostAndFoundType:
-                    type: "string"
-                    description: "{FOUND=FOUND, LOST=LOST}"
-                    enum:
-                    - "FOUND"
-                    - "LOST"
   /user:
     get:
       summary: "getPostsByUserId"
@@ -253,24 +243,14 @@ paths:
                       - "LIFE_STYLE"
                       - "LOST_AND_FOUND"
                       - "TRADE"
+                    imageUrls:
+                      type: "array"
+                      description: ""
+                      items:
+                        type: "string"
                     createdAt:
                       type: "string"
                       description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    cuisineId:
-                      type: "integer"
-                      description: ""
-                    merchantId:
-                      type: "integer"
-                      description: ""
-                    lostAndFoundType:
-                      type: "string"
-                      description: "{FOUND=FOUND, LOST=LOST}"
-                      enum:
-                      - "FOUND"
-                      - "LOST"
   /:
     post:
       summary: "saveOrUpdate"
@@ -304,18 +284,11 @@ paths:
                 content:
                   type: "string"
                   description: ""
-                cuisineId:
-                  type: "integer"
+                imageUrls:
+                  type: "array"
                   description: ""
-                merchantId:
-                  type: "integer"
-                  description: ""
-                lostAndFoundType:
-                  type: "string"
-                  description: "{FOUND=FOUND, LOST=LOST}"
-                  enum:
-                  - "FOUND"
-                  - "LOST"
+                  items:
+                    type: "string"
               description: ""
       responses:
         "200":
@@ -360,13 +333,6 @@ paths:
         schema:
           type: "integer"
           nullable: false
-      - name: "lostAndFoundType"
-        in: "query"
-        description: " FOUND :FOUND\nLOST :LOST"
-        required: false
-        schema:
-          type: "string"
-          nullable: false
       responses:
         "200":
           description: ""
@@ -407,24 +373,14 @@ paths:
                       - "LIFE_STYLE"
                       - "LOST_AND_FOUND"
                       - "TRADE"
+                    imageUrls:
+                      type: "array"
+                      description: ""
+                      items:
+                        type: "string"
                     createdAt:
                       type: "string"
                       description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    cuisineId:
-                      type: "integer"
-                      description: ""
-                    merchantId:
-                      type: "integer"
-                      description: ""
-                    lostAndFoundType:
-                      type: "string"
-                      description: "{FOUND=FOUND, LOST=LOST}"
-                      enum:
-                      - "FOUND"
-                      - "LOST"
   /search:
     post:
       summary: "searchPosts"
@@ -447,12 +403,6 @@ paths:
                   - "LIFE_STYLE"
                   - "LOST_AND_FOUND"
                   - "TRADE"
-                lostAndFoundType:
-                  type: "string"
-                  description: "{FOUND=FOUND, LOST=LOST}"
-                  enum:
-                  - "FOUND"
-                  - "LOST"
               description: ""
       responses:
         "200":
@@ -494,24 +444,14 @@ paths:
                       - "LIFE_STYLE"
                       - "LOST_AND_FOUND"
                       - "TRADE"
+                    imageUrls:
+                      type: "array"
+                      description: ""
+                      items:
+                        type: "string"
                     createdAt:
                       type: "string"
                       description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    cuisineId:
-                      type: "integer"
-                      description: ""
-                    merchantId:
-                      type: "integer"
-                      description: ""
-                    lostAndFoundType:
-                      type: "string"
-                      description: "{FOUND=FOUND, LOST=LOST}"
-                      enum:
-                      - "FOUND"
-                      - "LOST"
   /homePage:
     get:
       summary: "getHomePage"
@@ -533,6 +473,13 @@ paths:
           type: "integer"
           nullable: false
           default: "10"
+      - name: "postType"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "string"
+          nullable: false
       responses:
         "200":
           description: ""
@@ -580,24 +527,14 @@ paths:
                               - "LIFE_STYLE"
                               - "LOST_AND_FOUND"
                               - "TRADE"
+                            imageUrls:
+                              type: "array"
+                              description: ""
+                              items:
+                                type: "string"
                             createdAt:
                               type: "string"
                               description: ""
-                            score:
-                              type: "number"
-                              description: ""
-                            cuisineId:
-                              type: "integer"
-                              description: ""
-                            merchantId:
-                              type: "integer"
-                              description: ""
-                            lostAndFoundType:
-                              type: "string"
-                              description: "{FOUND=FOUND, LOST=LOST}"
-                              enum:
-                              - "FOUND"
-                              - "LOST"
                           description: ""
                         userInfo:
                           type: "object"
@@ -626,6 +563,12 @@ paths:
                             postCount:
                               type: "integer"
                               description: ""
+                            gender:
+                              type: "string"
+                              description: "{MALE=MALE, FEMALE=FEMALE}"
+                              enum:
+                              - "MALE"
+                              - "FEMALE"
                             viewCount:
                               type: "integer"
                               description: ""
@@ -661,7 +604,7 @@ paths:
                                 type: "string"
                                 description: ""
                             description: "org.roni.ronitrouble.entity.Comment"
-                      description: "org.roni.ronitrouble.dto.vie.HomePageResp.PostDetail"
+                      description: "org.roni.ronitrouble.dto.view.HomePageResp.PostDetail"
   /comment:
     get:
       summary: "getComments"
@@ -753,186 +696,17 @@ paths:
       responses:
         "200":
           description: "No Content"
-  /cuisine/cuisines:
+  /message:
     get:
-      summary: "getCuisinesByMerchant"
-      description: "getCuisinesByMerchant"
+      summary: "buildMessageNotificationChannel"
+      description: "buildMessageNotificationChannel"
       parameters:
-      - name: "merchantId"
+      - name: "token"
         in: "query"
         description: ""
         required: true
         schema:
-          type: "integer"
-          nullable: false
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  type: "object"
-                  properties:
-                    cuisineId:
-                      type: "integer"
-                      description: ""
-                    merchantId:
-                      type: "integer"
-                      description: ""
-                    avatarUrl:
-                      type: "string"
-                      description: ""
-                    cuisineName:
-                      type: "string"
-                      description: ""
-                    price:
-                      type: "number"
-                      description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    introduce:
-                      type: "string"
-                      description: ""
-  /cuisine/update:
-    post:
-      summary: "addOrUpdateCuisine"
-      description: "addOrUpdateCuisine"
-      parameters:
-      - name: "merchantId"
-        in: "query"
-        description: ""
-        required: true
-        schema:
-          type: "integer"
-          nullable: false
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                cuisineId:
-                  type: "integer"
-                  description: ""
-                merchantId:
-                  type: "integer"
-                  description: ""
-                avatarUrl:
-                  type: "string"
-                  description: ""
-                cuisineName:
-                  type: "string"
-                  description: ""
-                price:
-                  type: "number"
-                  description: ""
-                score:
-                  type: "number"
-                  description: ""
-                introduce:
-                  type: "string"
-                  description: ""
-              description: ""
-      responses:
-        "200":
-          description: "No Content"
-  /cuisine/delete:
-    delete:
-      summary: "deleteCuisine"
-      description: "deleteCuisine"
-      parameters:
-      - name: "cuisineId"
-        in: "query"
-        description: ""
-        required: true
-        schema:
-          type: "integer"
-          nullable: false
-      responses:
-        "200":
-          description: "No Content"
-  /merchant/page:
-    get:
-      summary: "getMerchantInfosByPage"
-      description: "getMerchantInfosByPage"
-      parameters:
-      - name: "start"
-        in: "query"
-        description: ""
-        required: true
-        schema:
-          type: "integer"
-          nullable: false
-      - name: "pageSize"
-        in: "query"
-        description: ""
-        required: true
-        schema:
-          type: "integer"
-          nullable: false
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  type: "object"
-                  properties:
-                    merchantId:
-                      type: "integer"
-                      description: "userid"
-                    name:
-                      type: "string"
-                      description: ""
-                    address:
-                      type: "string"
-                      description: ""
-                    phoneNumber:
-                      type: "string"
-                      description: ""
-                    avatarUrl:
-                      type: "string"
-                      description: ""
-                    bannerUrl:
-                      type: "string"
-                      description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    startAt:
-                      type: "string"
-                      description: ""
-                    endAt:
-                      type: "string"
-                      description: ""
-                    createdAt:
-                      type: "string"
-                      description: ""
-                    category:
-                      type: "string"
-                      description: "{RESTAURANT=RESTAURANT, COFFEE_TEA=COFFEE_TEA,\
-                        \ BBQ_GRILL=BBQ_GRILL, HOTPOT_WESTERN=HOTPOT_WESTERN}"
-                      enum:
-                      - "RESTAURANT"
-                      - "COFFEE_TEA"
-                      - "BBQ_GRILL"
-                      - "HOTPOT_WESTERN"
-  /merchant/merchantInfo:
-    get:
-      summary: "getMerchantInfoById"
-      description: "getMerchantInfoById"
-      parameters:
-      - name: "merchantId"
-        in: "query"
-        description: ""
-        required: true
-        schema:
-          type: "integer"
+          type: "string"
           nullable: false
       responses:
         "200":
@@ -942,54 +716,293 @@ paths:
               schema:
                 type: "object"
                 properties:
-                  merchantId:
+                  timeout:
                     type: "integer"
-                    description: "userid"
-                  name:
-                    type: "string"
                     description: ""
-                  address:
-                    type: "string"
+                    format: "int64"
+                  handler:
+                    type: "object"
+                    properties: {}
                     description: ""
-                  phoneNumber:
-                    type: "string"
+                  earlySendAttempts:
+                    type: "array"
+                    description: "Store send data before handler is initialized."
+                    items:
+                      type: "object"
+                      properties:
+                        data:
+                          type: "object"
+                          properties: {}
+                          description: ""
+                        mediaType:
+                          type: "object"
+                          properties:
+                            type:
+                              type: "string"
+                              description: ""
+                            subtype:
+                              type: "string"
+                              description: ""
+                            parameters:
+                              type: "object"
+                              properties:
+                                key:
+                                  type: "string"
+                              description: ""
+                            toStringValue:
+                              type: "string"
+                              description: ""
+                          description: ""
+                      description: "org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter.DataWithMediaType"
+                    default: "new LinkedHashSet<>(8)"
+                  complete:
+                    type: "boolean"
+                    description: "Store successful completion before the handler is\
+                      \ initialized."
+                  failure:
+                    type: "object"
+                    properties:
+                      detailMessage:
+                        type: "string"
+                        description: "Specific details about the Throwable.  For example,\
+                          \ for\n{@code FileNotFoundException}, this contains the\
+                          \ name of\nthe file that could not be found."
+                      cause:
+                        type: "object"
+                        properties:
+                          detailMessage:
+                            type: "string"
+                            description: "Specific details about the Throwable.  For\
+                              \ example, for\n{@code FileNotFoundException}, this\
+                              \ contains the name of\nthe file that could not be found."
+                          cause:
+                            type: "object"
+                            properties: {}
+                            description: "The throwable that caused this throwable\
+                              \ to get thrown, or null if this\nthrowable was not\
+                              \ caused by another throwable, or if the causative\n\
+                              throwable is unknown.  If this field is equal to this\
+                              \ throwable itself,\nit indicates that the cause of\
+                              \ this throwable has not yet been\ninitialized."
+                            default: "this"
+                          stackTrace:
+                            type: "array"
+                            description: "The stack trace, as returned by{@link #getStackTrace()}.\n\
+                              \nThe field is initialized to a zero-length array. \
+                              \ A{@code\n    * null} value of this field indicates\
+                              \ subsequent calls to{@link\n    * #setStackTrace(StackTraceElement[])}\
+                              \ and{@link\n    * #fillInStackTrace()} will be no-ops."
+                            items:
+                              type: "object"
+                              properties:
+                                classLoaderName:
+                                  type: "string"
+                                  description: ""
+                                moduleName:
+                                  type: "string"
+                                  description: ""
+                                moduleVersion:
+                                  type: "string"
+                                  description: ""
+                                declaringClass:
+                                  type: "string"
+                                  description: ""
+                                methodName:
+                                  type: "string"
+                                  description: ""
+                                fileName:
+                                  type: "string"
+                                  description: ""
+                                lineNumber:
+                                  type: "integer"
+                                  description: ""
+                                format:
+                                  maximum: 128
+                                  minimum: -127
+                                  type: "integer"
+                                  description: ""
+                                  default: "0"
+                            default: "new StackTraceElement[0]"
+                          suppressedExceptions:
+                            type: "array"
+                            description: "The list of suppressed exceptions, as returned\
+                              \ by{@link\n    * #getSuppressed()}.  The list is initialized\
+                              \ to a zero-element\nunmodifiable sentinel list.  When\
+                              \ a serialized Throwable is\nread in, if the{@code suppressedExceptions}\
+                              \ field points to a\nzero-element list, the field is\
+                              \ reset to the sentinel value."
+                            items:
+                              type: "object"
+                              properties: {}
+                              description: "java.lang.Throwable"
+                            default: "Collections.emptyList()"
+                        description: "The throwable that caused this throwable to\
+                          \ get thrown, or null if this\nthrowable was not caused\
+                          \ by another throwable, or if the causative\nthrowable is\
+                          \ unknown.  If this field is equal to this throwable itself,\n\
+                          it indicates that the cause of this throwable has not yet\
+                          \ been\ninitialized."
+                        default: "this"
+                      stackTrace:
+                        type: "array"
+                        description: "The stack trace, as returned by{@link #getStackTrace()}.\n\
+                          \nThe field is initialized to a zero-length array.  A{@code\n\
+                          \    * null} value of this field indicates subsequent calls\
+                          \ to{@link\n    * #setStackTrace(StackTraceElement[])} and{@link\n\
+                          \    * #fillInStackTrace()} will be no-ops."
+                        items:
+                          type: "object"
+                          properties:
+                            classLoaderName:
+                              type: "string"
+                              description: ""
+                            moduleName:
+                              type: "string"
+                              description: ""
+                            moduleVersion:
+                              type: "string"
+                              description: ""
+                            declaringClass:
+                              type: "string"
+                              description: ""
+                            methodName:
+                              type: "string"
+                              description: ""
+                            fileName:
+                              type: "string"
+                              description: ""
+                            lineNumber:
+                              type: "integer"
+                              description: ""
+                            format:
+                              maximum: 128
+                              minimum: -127
+                              type: "integer"
+                              description: ""
+                              default: "0"
+                        default: "new StackTraceElement[0]"
+                      suppressedExceptions:
+                        type: "array"
+                        description: "The list of suppressed exceptions, as returned\
+                          \ by{@link\n    * #getSuppressed()}.  The list is initialized\
+                          \ to a zero-element\nunmodifiable sentinel list.  When a\
+                          \ serialized Throwable is\nread in, if the{@code suppressedExceptions}\
+                          \ field points to a\nzero-element list, the field is reset\
+                          \ to the sentinel value."
+                        items:
+                          type: "object"
+                          properties:
+                            detailMessage:
+                              type: "string"
+                              description: "Specific details about the Throwable.\
+                                \  For example, for\n{@code FileNotFoundException},\
+                                \ this contains the name of\nthe file that could not\
+                                \ be found."
+                            cause:
+                              type: "object"
+                              properties: {}
+                              description: "The throwable that caused this throwable\
+                                \ to get thrown, or null if this\nthrowable was not\
+                                \ caused by another throwable, or if the causative\n\
+                                throwable is unknown.  If this field is equal to this\
+                                \ throwable itself,\nit indicates that the cause of\
+                                \ this throwable has not yet been\ninitialized."
+                              default: "this"
+                            stackTrace:
+                              type: "array"
+                              description: "The stack trace, as returned by{@link\
+                                \ #getStackTrace()}.\n\nThe field is initialized to\
+                                \ a zero-length array.  A{@code\n    * null} value\
+                                \ of this field indicates subsequent calls to{@link\n\
+                                \    * #setStackTrace(StackTraceElement[])} and{@link\n\
+                                \    * #fillInStackTrace()} will be no-ops."
+                              items:
+                                type: "object"
+                                properties:
+                                  classLoaderName:
+                                    type: "string"
+                                    description: ""
+                                  moduleName:
+                                    type: "string"
+                                    description: ""
+                                  moduleVersion:
+                                    type: "string"
+                                    description: ""
+                                  declaringClass:
+                                    type: "string"
+                                    description: ""
+                                  methodName:
+                                    type: "string"
+                                    description: ""
+                                  fileName:
+                                    type: "string"
+                                    description: ""
+                                  lineNumber:
+                                    type: "integer"
+                                    description: ""
+                                  format:
+                                    maximum: 128
+                                    minimum: -127
+                                    type: "integer"
+                                    description: ""
+                                    default: "0"
+                              default: "new StackTraceElement[0]"
+                            suppressedExceptions:
+                              type: "array"
+                              description: "The list of suppressed exceptions, as\
+                                \ returned by{@link\n    * #getSuppressed()}.  The\
+                                \ list is initialized to a zero-element\nunmodifiable\
+                                \ sentinel list.  When a serialized Throwable is\n\
+                                read in, if the{@code suppressedExceptions} field\
+                                \ points to a\nzero-element list, the field is reset\
+                                \ to the sentinel value."
+                              items:
+                                type: "object"
+                                properties: {}
+                                description: "java.lang.Throwable"
+                              default: "Collections.emptyList()"
+                          description: "java.lang.Throwable"
+                        default: "Collections.emptyList()"
+                    description: "Store an error before the handler is initialized."
+                  timeoutCallback:
+                    type: "object"
+                    properties:
+                      delegates:
+                        type: "array"
+                        description: ""
+                        items:
+                          type: "object"
+                          properties: {}
+                          description: "java.lang.Runnable"
+                        default: "new ArrayList<>(1)"
                     description: ""
-                  avatarUrl:
-                    type: "string"
+                    default: "new DefaultCallback()"
+                  errorCallback:
+                    type: "object"
+                    properties: {}
                     description: ""
-                  bannerUrl:
-                    type: "string"
+                    default: "new ErrorCallback()"
+                  completionCallback:
+                    type: "object"
+                    properties:
+                      delegates:
+                        type: "array"
+                        description: ""
+                        items:
+                          type: "object"
+                          properties: {}
+                          description: "java.lang.Runnable"
+                        default: "new ArrayList<>(1)"
                     description: ""
-                  score:
-                    type: "number"
-                    description: ""
-                  startAt:
-                    type: "string"
-                    description: ""
-                  endAt:
-                    type: "string"
-                    description: ""
-                  createdAt:
-                    type: "string"
-                    description: ""
-                  category:
-                    type: "string"
-                    description: "{RESTAURANT=RESTAURANT, COFFEE_TEA=COFFEE_TEA, BBQ_GRILL=BBQ_GRILL,\
-                      \ HOTPOT_WESTERN=HOTPOT_WESTERN}"
-                    enum:
-                    - "RESTAURANT"
-                    - "COFFEE_TEA"
-                    - "BBQ_GRILL"
-                    - "HOTPOT_WESTERN"
-  /merchant/update:
+                    default: "new DefaultCallback()"
     post:
-      summary: "addOrUpdateMerchantInfoById"
-      description: "addOrUpdateMerchantInfoById"
+      summary: "sendMessage"
+      description: "sendMessage"
       parameters:
-      - name: "merchantId"
+      - name: "userId"
         in: "query"
         description: ""
-        required: true
+        required: false
         schema:
           type: "integer"
           nullable: false
@@ -999,64 +1012,79 @@ paths:
             schema:
               type: "object"
               properties:
-                merchantId:
+                content:
+                  type: "string"
+                  description: ""
+                conversationId:
                   type: "integer"
-                  description: "userid"
-                name:
-                  type: "string"
                   description: ""
-                address:
+                messageType:
                   type: "string"
-                  description: ""
-                phoneNumber:
-                  type: "string"
-                  description: ""
-                avatarUrl:
-                  type: "string"
-                  description: ""
-                bannerUrl:
-                  type: "string"
-                  description: ""
-                score:
-                  type: "number"
-                  description: ""
-                startAt:
-                  type: "string"
-                  description: ""
-                endAt:
-                  type: "string"
-                  description: ""
-                createdAt:
-                  type: "string"
-                  description: ""
-                category:
-                  type: "string"
-                  description: "{RESTAURANT=RESTAURANT, COFFEE_TEA=COFFEE_TEA, BBQ_GRILL=BBQ_GRILL,\
-                    \ HOTPOT_WESTERN=HOTPOT_WESTERN}"
+                  description: "{TEXT=TEXT, IMAGE=IMAGE, FILE=FILE, VOICE=VOICE}"
                   enum:
-                  - "RESTAURANT"
-                  - "COFFEE_TEA"
-                  - "BBQ_GRILL"
-                  - "HOTPOT_WESTERN"
+                  - "TEXT"
+                  - "IMAGE"
+                  - "FILE"
+                  - "VOICE"
+                rawFileName:
+                  type: "string"
+                  description: ""
               description: ""
       responses:
         "200":
           description: "No Content"
-  /merchant/delete:
-    delete:
-      summary: "deleteMerchantById"
-      description: "deleteMerchantById"
+  /message/userBox:
+    get:
+      summary: "getMessageFromUserBox"
+      description: "getMessageFromUserBox"
       parameters:
-      - name: "merchantId"
+      - name: "from"
         in: "query"
         description: ""
         required: true
         schema:
           type: "integer"
           nullable: false
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
       responses:
         "200":
-          description: "No Content"
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    mid:
+                      type: "integer"
+                      description: ""
+                    content:
+                      type: "string"
+                      description: ""
+                    senderId:
+                      type: "integer"
+                      description: ""
+                    conversationId:
+                      type: "integer"
+                      description: ""
+                    messageType:
+                      type: "string"
+                      description: "{TEXT=TEXT, IMAGE=IMAGE, FILE=FILE, VOICE=VOICE}"
+                      enum:
+                      - "TEXT"
+                      - "IMAGE"
+                      - "FILE"
+                      - "VOICE"
+                    midForUser:
+                      type: "integer"
+                      description: ""
   /userInfo:
     get:
       summary: "getUserInfo"
@@ -1101,6 +1129,12 @@ paths:
                   postCount:
                     type: "integer"
                     description: ""
+                  gender:
+                    type: "string"
+                    description: "{MALE=MALE, FEMALE=FEMALE}"
+                    enum:
+                    - "MALE"
+                    - "FEMALE"
                   viewCount:
                     type: "integer"
                     description: ""
@@ -1148,6 +1182,12 @@ paths:
                 postCount:
                   type: "integer"
                   description: ""
+                gender:
+                  type: "string"
+                  description: "{MALE=MALE, FEMALE=FEMALE}"
+                  enum:
+                  - "MALE"
+                  - "FEMALE"
                 viewCount:
                   type: "integer"
                   description: ""
@@ -1229,24 +1269,14 @@ paths:
                       - "LIFE_STYLE"
                       - "LOST_AND_FOUND"
                       - "TRADE"
+                    imageUrls:
+                      type: "array"
+                      description: ""
+                      items:
+                        type: "string"
                     createdAt:
                       type: "string"
                       description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    cuisineId:
-                      type: "integer"
-                      description: ""
-                    merchantId:
-                      type: "integer"
-                      description: ""
-                    lostAndFoundType:
-                      type: "string"
-                      description: "{FOUND=FOUND, LOST=LOST}"
-                      enum:
-                      - "FOUND"
-                      - "LOST"
   /userInfo/comments:
     get:
       summary: "getUserComments"
@@ -1342,24 +1372,14 @@ paths:
                       - "LIFE_STYLE"
                       - "LOST_AND_FOUND"
                       - "TRADE"
+                    imageUrls:
+                      type: "array"
+                      description: ""
+                      items:
+                        type: "string"
                     createdAt:
                       type: "string"
                       description: ""
-                    score:
-                      type: "number"
-                      description: ""
-                    cuisineId:
-                      type: "integer"
-                      description: ""
-                    merchantId:
-                      type: "integer"
-                      description: ""
-                    lostAndFoundType:
-                      type: "string"
-                      description: "{FOUND=FOUND, LOST=LOST}"
-                      enum:
-                      - "FOUND"
-                      - "LOST"
   /userInfo/postCount:
     get:
       summary: "getUserPostCount"
@@ -1417,6 +1437,253 @@ paths:
             application/json:
               schema:
                 type: "integer"
+  /friendApply:
+    get:
+      summary: "getApplyAndProfileInfos"
+      description: "getApplyAndProfileInfos"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "integer"
+                      description: ""
+                    senderId:
+                      type: "integer"
+                      description: ""
+                    receiverId:
+                      type: "integer"
+                      description: ""
+                    msg:
+                      type: "string"
+                      description: ""
+                    friendApplyStatus:
+                      type: "string"
+                      description: "{NOT_READ=NOT_READ, PASSED=PASSED, REFUSED=REFUSED}"
+                      enum:
+                      - "NOT_READ"
+                      - "PASSED"
+                      - "REFUSED"
+                    readStatus:
+                      type: "string"
+                      description: "{READ=READ, NOT_READ=NOT_READ}"
+                      enum:
+                      - "READ"
+                      - "NOT_READ"
+                    createdAt:
+                      type: "string"
+                      description: ""
+                    userId:
+                      type: "integer"
+                      description: ""
+                    nickname:
+                      type: "string"
+                      description: ""
+                    avtarUrl:
+                      type: "string"
+                      description: ""
+                    introduction:
+                      type: "string"
+                      description: ""
+                    createAt:
+                      type: "string"
+                      description: ""
+                    birthday:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    postCount:
+                      type: "integer"
+                      description: ""
+                    gender:
+                      type: "string"
+                      description: "{MALE=MALE, FEMALE=FEMALE}"
+                      enum:
+                      - "MALE"
+                      - "FEMALE"
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likesFavoritesCount:
+                      type: "integer"
+                      description: ""
+    post:
+      summary: "createFriendApply"
+      description: "createFriendApply"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                receiverId:
+                  type: "integer"
+                  description: ""
+                msg:
+                  type: "string"
+                  description: ""
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+    patch:
+      summary: "修改好友申请通过状态"
+      description: "修改好友申请通过状态"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                  description: ""
+                friendApplyStatus:
+                  type: "string"
+                  description: "{NOT_READ=NOT_READ, PASSED=PASSED, REFUSED=REFUSED}"
+                  enum:
+                  - "NOT_READ"
+                  - "PASSED"
+                  - "REFUSED"
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /friendApply/readStatus:
+    patch:
+      summary: "修改好友申请已读未读状态"
+      description: "修改好友申请已读未读状态"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                  description: ""
+                readStatus:
+                  type: "string"
+                  description: "{READ=READ, NOT_READ=NOT_READ}"
+                  enum:
+                  - "READ"
+                  - "NOT_READ"
+              description: ""
+      responses:
+        "200":
+          description: "No Content"
+  /friendApply/count:
+    get:
+      summary: "获取未读好友申请数"
+      description: "获取未读好友申请数"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "integer"
+  /privateChat:
+    get:
+      summary: "getProfilesOfPrivateChat"
+      description: "getProfilesOfPrivateChat"
+      parameters:
+      - name: "userId"
+        in: "query"
+        description: ""
+        required: false
+        schema:
+          type: "integer"
+          nullable: false
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    userId:
+                      type: "integer"
+                      description: ""
+                    nickname:
+                      type: "string"
+                      description: ""
+                    avtarUrl:
+                      type: "string"
+                      description: ""
+                    introduction:
+                      type: "string"
+                      description: ""
+                    createAt:
+                      type: "string"
+                      description: ""
+                    birthday:
+                      type: "string"
+                      description: ""
+                    location:
+                      type: "string"
+                      description: ""
+                    postCount:
+                      type: "integer"
+                      description: ""
+                    gender:
+                      type: "string"
+                      description: "{MALE=MALE, FEMALE=FEMALE}"
+                      enum:
+                      - "MALE"
+                      - "FEMALE"
+                    viewCount:
+                      type: "integer"
+                      description: ""
+                    likesFavoritesCount:
+                      type: "integer"
+                      description: ""
+                    conversationId:
+                      type: "integer"
+                      description: ""
   /userCredential/login:
     post:
       summary: "login"
@@ -1451,12 +1718,6 @@ paths:
                   email:
                     type: "string"
                     description: ""
-                  role:
-                    type: "string"
-                    description: "{STUDENT=STUDENT, MERCHANT=MERCHANT}"
-                    enum:
-                    - "STUDENT"
-                    - "MERCHANT"
   /userCredential/register:
     post:
       summary: "register"
@@ -1471,55 +1732,6 @@ paths:
                   type: "string"
                   description: ""
                 password:
-                  type: "string"
-                  description: ""
-              description: ""
-      responses:
-        "200":
-          description: "No Content"
-  /userCredential/register/student:
-    post:
-      summary: "registerStudent"
-      description: "registerStudent"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                email:
-                  type: "string"
-                  description: ""
-                password:
-                  type: "string"
-                  description: ""
-              description: ""
-      responses:
-        "200":
-          description: "No Content"
-  /userCredential/register/merchant:
-    post:
-      summary: "registerMerchant"
-      description: "registerMerchant"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                email:
-                  type: "string"
-                  description: ""
-                password:
-                  type: "string"
-                  description: ""
-                name:
-                  type: "string"
-                  description: ""
-                address:
-                  type: "string"
-                  description: ""
-                phoneNumber:
                   type: "string"
                   description: ""
               description: ""
@@ -1561,24 +1773,14 @@ components:
           - "LIFE_STYLE"
           - "LOST_AND_FOUND"
           - "TRADE"
+        imageUrls:
+          type: "array"
+          description: ""
+          items:
+            type: "string"
         createdAt:
           type: "string"
           description: ""
-        score:
-          type: "number"
-          description: ""
-        cuisineId:
-          type: "integer"
-          description: ""
-        merchantId:
-          type: "integer"
-          description: ""
-        lostAndFoundType:
-          type: "string"
-          description: "{FOUND=FOUND, LOST=LOST}"
-          enum:
-          - "FOUND"
-          - "LOST"
       description: ""
     org.roni.ronitrouble.entity.UserInfo:
       type: "object"
@@ -1607,6 +1809,12 @@ components:
         postCount:
           type: "integer"
           description: ""
+        gender:
+          type: "string"
+          description: "{MALE=MALE, FEMALE=FEMALE}"
+          enum:
+          - "MALE"
+          - "FEMALE"
         viewCount:
           type: "integer"
           description: ""
@@ -1639,7 +1847,7 @@ components:
           type: "string"
           description: ""
       description: "org.roni.ronitrouble.entity.Comment"
-    org.roni.ronitrouble.dto.vie.HomePageResp.PostDetail:
+    org.roni.ronitrouble.dto.view.HomePageResp.PostDetail:
       type: "object"
       properties:
         post:
@@ -1675,24 +1883,14 @@ components:
               - "LIFE_STYLE"
               - "LOST_AND_FOUND"
               - "TRADE"
+            imageUrls:
+              type: "array"
+              description: ""
+              items:
+                type: "string"
             createdAt:
               type: "string"
               description: ""
-            score:
-              type: "number"
-              description: ""
-            cuisineId:
-              type: "integer"
-              description: ""
-            merchantId:
-              type: "integer"
-              description: ""
-            lostAndFoundType:
-              type: "string"
-              description: "{FOUND=FOUND, LOST=LOST}"
-              enum:
-              - "FOUND"
-              - "LOST"
           description: ""
         userInfo:
           type: "object"
@@ -1721,6 +1919,12 @@ components:
             postCount:
               type: "integer"
               description: ""
+            gender:
+              type: "string"
+              description: "{MALE=MALE, FEMALE=FEMALE}"
+              enum:
+              - "MALE"
+              - "FEMALE"
             viewCount:
               type: "integer"
               description: ""
@@ -1756,4 +1960,275 @@ components:
                 type: "string"
                 description: ""
             description: "org.roni.ronitrouble.entity.Comment"
-      description: "org.roni.ronitrouble.dto.vie.HomePageResp.PostDetail"
+      description: "org.roni.ronitrouble.dto.view.HomePageResp.PostDetail"
+    org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter.Handler:
+      type: "object"
+      properties: {}
+      description: ""
+    java.lang.Object:
+      type: "object"
+      properties: {}
+      description: ""
+    org.springframework.http.MediaType:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          description: ""
+        subtype:
+          type: "string"
+          description: ""
+        parameters:
+          type: "object"
+          properties:
+            key:
+              type: "string"
+          description: ""
+        toStringValue:
+          type: "string"
+          description: ""
+      description: ""
+    org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter.DataWithMediaType:
+      type: "object"
+      properties:
+        data:
+          type: "object"
+          properties: {}
+          description: ""
+        mediaType:
+          type: "object"
+          properties:
+            type:
+              type: "string"
+              description: ""
+            subtype:
+              type: "string"
+              description: ""
+            parameters:
+              type: "object"
+              properties:
+                key:
+                  type: "string"
+              description: ""
+            toStringValue:
+              type: "string"
+              description: ""
+          description: ""
+      description: "org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter.DataWithMediaType"
+    java.lang.Throwable:
+      type: "object"
+      properties:
+        detailMessage:
+          type: "string"
+          description: "Specific details about the Throwable.  For example, for\n\
+            {@code FileNotFoundException}, this contains the name of\nthe file that\
+            \ could not be found."
+        cause:
+          type: "object"
+          properties:
+            detailMessage:
+              type: "string"
+              description: "Specific details about the Throwable.  For example, for\n\
+                {@code FileNotFoundException}, this contains the name of\nthe file\
+                \ that could not be found."
+            cause:
+              type: "object"
+              properties: {}
+              description: "The throwable that caused this throwable to get thrown,\
+                \ or null if this\nthrowable was not caused by another throwable,\
+                \ or if the causative\nthrowable is unknown.  If this field is equal\
+                \ to this throwable itself,\nit indicates that the cause of this throwable\
+                \ has not yet been\ninitialized."
+              default: "this"
+            stackTrace:
+              type: "array"
+              description: "The stack trace, as returned by{@link #getStackTrace()}.\n\
+                \nThe field is initialized to a zero-length array.  A{@code\n    *\
+                \ null} value of this field indicates subsequent calls to{@link\n\
+                \    * #setStackTrace(StackTraceElement[])} and{@link\n    * #fillInStackTrace()}\
+                \ will be no-ops."
+              items:
+                type: "object"
+                properties:
+                  classLoaderName:
+                    type: "string"
+                    description: ""
+                  moduleName:
+                    type: "string"
+                    description: ""
+                  moduleVersion:
+                    type: "string"
+                    description: ""
+                  declaringClass:
+                    type: "string"
+                    description: ""
+                  methodName:
+                    type: "string"
+                    description: ""
+                  fileName:
+                    type: "string"
+                    description: ""
+                  lineNumber:
+                    type: "integer"
+                    description: ""
+                  format:
+                    maximum: 128
+                    minimum: -127
+                    type: "integer"
+                    description: ""
+                    default: "0"
+              default: "new StackTraceElement[0]"
+            suppressedExceptions:
+              type: "array"
+              description: "The list of suppressed exceptions, as returned by{@link\n\
+                \    * #getSuppressed()}.  The list is initialized to a zero-element\n\
+                unmodifiable sentinel list.  When a serialized Throwable is\nread\
+                \ in, if the{@code suppressedExceptions} field points to a\nzero-element\
+                \ list, the field is reset to the sentinel value."
+              items:
+                type: "object"
+                properties: {}
+                description: "java.lang.Throwable"
+              default: "Collections.emptyList()"
+          description: "The throwable that caused this throwable to get thrown, or\
+            \ null if this\nthrowable was not caused by another throwable, or if the\
+            \ causative\nthrowable is unknown.  If this field is equal to this throwable\
+            \ itself,\nit indicates that the cause of this throwable has not yet been\n\
+            initialized."
+          default: "this"
+        stackTrace:
+          type: "array"
+          description: "The stack trace, as returned by{@link #getStackTrace()}.\n\
+            \nThe field is initialized to a zero-length array.  A{@code\n    * null}\
+            \ value of this field indicates subsequent calls to{@link\n    * #setStackTrace(StackTraceElement[])}\
+            \ and{@link\n    * #fillInStackTrace()} will be no-ops."
+          items:
+            type: "object"
+            properties:
+              classLoaderName:
+                type: "string"
+                description: ""
+              moduleName:
+                type: "string"
+                description: ""
+              moduleVersion:
+                type: "string"
+                description: ""
+              declaringClass:
+                type: "string"
+                description: ""
+              methodName:
+                type: "string"
+                description: ""
+              fileName:
+                type: "string"
+                description: ""
+              lineNumber:
+                type: "integer"
+                description: ""
+              format:
+                maximum: 128
+                minimum: -127
+                type: "integer"
+                description: ""
+                default: "0"
+          default: "new StackTraceElement[0]"
+        suppressedExceptions:
+          type: "array"
+          description: "The list of suppressed exceptions, as returned by{@link\n\
+            \    * #getSuppressed()}.  The list is initialized to a zero-element\n\
+            unmodifiable sentinel list.  When a serialized Throwable is\nread in,\
+            \ if the{@code suppressedExceptions} field points to a\nzero-element list,\
+            \ the field is reset to the sentinel value."
+          items:
+            type: "object"
+            properties:
+              detailMessage:
+                type: "string"
+                description: "Specific details about the Throwable.  For example,\
+                  \ for\n{@code FileNotFoundException}, this contains the name of\n\
+                  the file that could not be found."
+              cause:
+                type: "object"
+                properties: {}
+                description: "The throwable that caused this throwable to get thrown,\
+                  \ or null if this\nthrowable was not caused by another throwable,\
+                  \ or if the causative\nthrowable is unknown.  If this field is equal\
+                  \ to this throwable itself,\nit indicates that the cause of this\
+                  \ throwable has not yet been\ninitialized."
+                default: "this"
+              stackTrace:
+                type: "array"
+                description: "The stack trace, as returned by{@link #getStackTrace()}.\n\
+                  \nThe field is initialized to a zero-length array.  A{@code\n  \
+                  \  * null} value of this field indicates subsequent calls to{@link\n\
+                  \    * #setStackTrace(StackTraceElement[])} and{@link\n    * #fillInStackTrace()}\
+                  \ will be no-ops."
+                items:
+                  type: "object"
+                  properties:
+                    classLoaderName:
+                      type: "string"
+                      description: ""
+                    moduleName:
+                      type: "string"
+                      description: ""
+                    moduleVersion:
+                      type: "string"
+                      description: ""
+                    declaringClass:
+                      type: "string"
+                      description: ""
+                    methodName:
+                      type: "string"
+                      description: ""
+                    fileName:
+                      type: "string"
+                      description: ""
+                    lineNumber:
+                      type: "integer"
+                      description: ""
+                    format:
+                      maximum: 128
+                      minimum: -127
+                      type: "integer"
+                      description: ""
+                      default: "0"
+                default: "new StackTraceElement[0]"
+              suppressedExceptions:
+                type: "array"
+                description: "The list of suppressed exceptions, as returned by{@link\n\
+                  \    * #getSuppressed()}.  The list is initialized to a zero-element\n\
+                  unmodifiable sentinel list.  When a serialized Throwable is\nread\
+                  \ in, if the{@code suppressedExceptions} field points to a\nzero-element\
+                  \ list, the field is reset to the sentinel value."
+                items:
+                  type: "object"
+                  properties: {}
+                  description: "java.lang.Throwable"
+                default: "Collections.emptyList()"
+            description: "java.lang.Throwable"
+          default: "Collections.emptyList()"
+      description: "Store an error before the handler is initialized."
+    java.lang.Runnable:
+      type: "object"
+      properties: {}
+      description: "java.lang.Runnable"
+    org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter.DefaultCallback:
+      type: "object"
+      properties:
+        delegates:
+          type: "array"
+          description: ""
+          items:
+            type: "object"
+            properties: {}
+            description: "java.lang.Runnable"
+          default: "new ArrayList<>(1)"
+      description: ""
+      default: "new DefaultCallback()"
+    org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter.ErrorCallback:
+      type: "object"
+      properties: {}
+      description: ""
+      default: "new ErrorCallback()"

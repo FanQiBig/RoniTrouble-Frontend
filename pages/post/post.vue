@@ -6,20 +6,21 @@
 		nextTick,
 		getCurrentInstance
 	} from "vue";
-	
+
 	import {
 		postApi
 	} from "@/api/post.js";
+	import {
+		POST_TABS
+	} from "@/utils/postTabs.js";
 
-	const tabs = ref(["全部", "热门", "生活分享", "美食推荐", "寻物招领", "闲置交易"]);
+	const tabs = ref([...POST_TABS]);
 	const tabTypeMap = {
 		生活分享: "LIFE_STYLE",
 		美食推荐: "REVIEW",
 		美食: "REVIEW",
 		寻物招领: "LOST_AND_FOUND",
-		失物招领: "LOST_AND_FOUND",
 		闲置交易: "TRADE",
-		闲置推荐: "TRADE"
 	};
 	const activeTab = ref(0);
 	const isDrawerOpen = ref(false);
@@ -34,9 +35,84 @@
 	const tabsScrollWidth = ref(0);
 	const tabRects = ref([]);
 
+	function pad2(value) {
+		return String(value).padStart(2, '0');
+	}
+
+	function parsePostDate(value) {
+		if (!value && value !== 0) return null;
+		if (value instanceof Date) return isNaN(value.getTime()) ? null : value;
+		if (typeof value === 'number') {
+			if (!Number.isFinite(value)) return null;
+			const ts = value < 1e11 ? value * 1000 : value;
+			const date = new Date(ts);
+			return isNaN(date.getTime()) ? null : date;
+		}
+		if (typeof value !== 'string') return null;
+		const text = value.trim();
+		if (!text) return null;
+		if (/^\d{2}:\d{2}$/.test(text) || /^\d{2}-\d{2}$/.test(text)) return null;
+		if (/^\d+$/.test(text)) {
+			const num = Number(text);
+			if (!Number.isFinite(num)) return null;
+			const ts = text.length <= 10 ? num * 1000 : num;
+			const date = new Date(ts);
+			return isNaN(date.getTime()) ? null : date;
+		}
+		let match = text.match(/^(\d{4})[-/](\d{2})[-/](\d{2})$/);
+		if (match) {
+			const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+			return isNaN(date.getTime()) ? null : date;
+		}
+		match = text.match(/^(\d{4})[-/](\d{2})[-/](\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/);
+		if (match) {
+			const date = new Date(
+				Number(match[1]),
+				Number(match[2]) - 1,
+				Number(match[3]),
+				Number(match[4]),
+				Number(match[5]),
+				Number(match[6] || 0)
+			);
+			return isNaN(date.getTime()) ? null : date;
+		}
+		const parsed = new Date(text);
+		if (!isNaN(parsed.getTime())) return parsed;
+		const alt = new Date(text.replace(/-/g, '/').replace('T', ' '));
+		return isNaN(alt.getTime()) ? null : alt;
+	}
+
+	function formatPostTime(value) {
+		if (value === null || value === undefined || value === '') return '';
+		const raw = String(value).trim();
+		if (/^\d{2}:\d{2}$/.test(raw) || /^\d{2}-\d{2}$/.test(raw) || /^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+			return raw;
+		}
+		const date = parsePostDate(value);
+		if (!date) return raw;
+		const now = new Date();
+		const isSameYear = date.getFullYear() === now.getFullYear();
+		const isSameDay = isSameYear &&
+			date.getMonth() === now.getMonth() &&
+			date.getDate() === now.getDate();
+		if (isSameDay) {
+			return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+		}
+		if (isSameYear) {
+			return `${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+		}
+		return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+	}
+
 	function normalizePost(item) {
 		const post = item?.post ?? item ?? {};
 		const postId = item?.postId ?? post?.postId ?? post?.id ?? item?.id;
+		const rawUserInfo = item?.userInfo ?? item?.user ?? post?.user ?? item?.author ?? post?.author ?? {};
+		const normalizedUserInfo = {
+			...rawUserInfo,
+			avatarUrl: rawUserInfo?.avatarUrl ?? rawUserInfo?.avtarUrl ?? rawUserInfo?.avatar ?? '',
+			nickname: rawUserInfo?.nickname ?? rawUserInfo?.name ?? ''
+		};
 		const replyList = (item?.replyList ?? post?.replyList ?? item?.commentList ?? []).map((r) => ({
 			...r,
 			user: r?.user ?? r?.author ?? {},
@@ -49,7 +125,8 @@
 			id: item?.id ?? postId,
 			postId,
 			postType: item?.postType ?? post?.postType,
-			user: item?.user ?? post?.user ?? item?.author ?? post?.author ?? {},
+			user: normalizedUserInfo,
+			userInfo: normalizedUserInfo,
 			content: item?.content ?? post?.content ?? '',
 			images: item?.images ?? post?.images ?? post?.imageList ?? post?.imageUrls ?? [],
 			time: item?.time ?? post?.time ?? post?.createTime ?? post?.createdAt ?? '',
@@ -60,10 +137,10 @@
 			replyList
 		};
 	}
-	
+
 	async function loadPosts() {
 		if (loading.value || !hasMore.value) return;
-	
+
 		loading.value = true;
 		try {
 			const res = await postApi.getHomePage(from.value, pageSize.value);
@@ -82,7 +159,7 @@
 			loading.value = false;
 		}
 	}
-	
+
 	onMounted(() => {
 		loadPosts();
 		nextTick(() => measureTabs());
@@ -133,8 +210,7 @@
 		measureTabs();
 		nextTick(() => centerTab(i));
 	}
-	
-	// --- computed ---
+
 	const filteredPosts = computed(() => {
 		const tab = tabs.value[activeTab.value];
 		if (tab === "全部") return posts.value;
@@ -158,7 +234,7 @@
 			url: "/pages/mine/mine"
 		});
 	}
-	
+
 	function toAlarm() {
 		closeDrawer();
 		uni.navigateTo({
@@ -211,25 +287,46 @@
 	}
 
 	async function toggleLike(postItem) {
+		const postId = postItem?.postId ?? postItem?.post?.postId;
+		if (!postId || postItem?.likePending) return;
+		postItem.likePending = true;
+		const wasLiked = Boolean(postItem?.liked ?? postItem?.post?.liked);
+		applyLikeState(postItem, !wasLiked);
 		try {
-			const postId = postItem.postId ?? postItem.post?.postId;
-			if (!postId) return;
-			await postApi.changeLikeStatus(
-				postId,
-				'POST_LIKE'
-			);
-			if (typeof postItem.likes === 'number') postItem.likes += 1;
-			if (postItem.post && typeof postItem.post.likeCount === 'number') {
-				postItem.post.likeCount += 1;
-			}
-			postItem.liked = true;
+			await postApi.changeLikeStatus(postId, 'POST_LIKE');
 			uni.showToast({
-				title: '点赞成功',
-				icon: 'success'
+				title: wasLiked ? '已取消点赞' : '点赞成功',
+				icon: wasLiked ? 'none' : 'success'
 			});
 		} catch (error) {
+			applyLikeState(postItem, wasLiked);
 			console.error('点赞失败:', error);
+			uni.showToast({
+				title: '点赞失败',
+				icon: 'none'
+			});
+		} finally {
+			postItem.likePending = false;
 		}
+	}
+
+	function resolveLikeCount(postItem) {
+		const raw = postItem?.post?.likeCount ?? postItem?.likes ?? 0;
+		const num = Number(raw);
+		return Number.isFinite(num) ? num : 0;
+	}
+
+	function applyLikeState(postItem, nextLiked) {
+		if (!postItem) return;
+		const currentLiked = Boolean(postItem.liked ?? postItem.post?.liked);
+		if (currentLiked !== nextLiked) {
+			const delta = nextLiked ? 1 : -1;
+			const nextCount = Math.max(0, resolveLikeCount(postItem) + delta);
+			if (postItem.post) postItem.post.likeCount = nextCount;
+			postItem.likes = nextCount;
+		}
+		postItem.liked = nextLiked;
+		if (postItem.post) postItem.post.liked = nextLiked;
 	}
 
 	function openComments(postItem) {
@@ -247,7 +344,7 @@
 			icon: "none"
 		});
 	}
-	
+
 	function toPostDetail(postItem) {
 		const postId = postItem.postId ?? postItem.post?.postId;
 		if (postId) {
@@ -277,23 +374,10 @@
 
 		<!-- 分类 -->
 		<view class="tab-wrap">
-			<scroll-view
-				scroll-x
-				class="tabs"
-				:show-scrollbar="false"
-				:scroll-left="tabsScrollLeft"
-				:scroll-into-view="tabsScrollInto"
-				:scroll-with-animation="true"
-				@scroll="onTabsScroll"
-			>
-				<view
-					v-for="(t, i) in tabs"
-					:key="t"
-					:id="`tab-${i}`"
-					class="tab"
-					:class="{ active: i === activeTab }"
-					@click="onTabClick(i)"
-				>
+			<scroll-view scroll-x class="tabs" :show-scrollbar="false" :scroll-left="tabsScrollLeft"
+				:scroll-into-view="tabsScrollInto" :scroll-with-animation="true" @scroll="onTabsScroll">
+				<view v-for="(t, i) in tabs" :key="t" :id="`tab-${i}`" class="tab" :class="{ active: i === activeTab }"
+					@click="onTabClick(i)">
 					<text class="tab-txt">{{ t }}</text>
 					<view v-if="i === activeTab" class="tab-line" />
 				</view>
@@ -315,28 +399,27 @@
 				<view class="post-bd">
 					<text class="content">{{ postItem.post.content }}</text>
 
-					<!-- <view v-if="post.images?.length" class="media-row">
-						<image v-for="(img, idx) in post.images" :key="img" class="media" :src="img" mode="aspectFill"
-							@click="preview(post.images, idx)" />
-					</view> -->
+					<view v-if="postItem.post.imageUrls && postItem.post.imageUrls.length" class="media-row">
+						<image v-for="(img, idx) in postItem.post.imageUrls.slice(0, 3)" :key="idx" class="media"
+							:src="img" mode="aspectFill" @click="preview(postItem.post.imageUrls, idx)" />
+					</view>
 
 					<view class="post-meta">
-						<text class="time">{{ postItem.post.createdAt }}</text>
+						<text class="time">{{ formatPostTime(postItem.time || postItem.post.createdAt) }}</text>
 
 						<view class="actions">
 							<view class="act" @click="toggleLike(postItem)">
-								<!-- <image class="act-icon" :class="{ liked: post.liked }"
-									:src="post.liked ? '/static/component/like-active.png' : '/static/component/like.png'"
-									mode="aspectFit" /> -->
-								<image class="act-icon" src="/static/component/like-active.png" mode="aspectFit" />
+								<image class="act-icon"
+									:src="(postItem.liked || postItem.post?.liked) ? '/static/component/like-active.png' : '/static/component/like.png'"
+									mode="aspectFit" />
 								<text class="act-num">{{ postItem.post.likeCount || 0 }}</text>
 							</view>
-						
+
 							<view class="act" @click="openComments(postItem)">
 								<image class="act-icon" src="/static/component/comment.png" mode="aspectFit" />
 								<text class="act-num">{{ postItem.post.commentCount }}</text>
 							</view>
-						
+
 							<view class="act" @click="share(postItem)">
 								<image class="act-icon" src="/static/component/share.png" mode="aspectFit" />
 							</view>
@@ -346,23 +429,23 @@
 
 				<!-- 评论 -->
 				<view v-if="postItem.replyList && postItem.replyList.length" class="reply-card">
-					<view v-for="c in postItem.comments.slice(0, 2)" :key="c.commentId" class="reply-row" @click="toPostDetail(post)">
+					<view v-for="c in postItem.comments.slice(0, 2)" :key="c.commentId" class="reply-row"
+						@click="toPostDetail(post)">
 						<text class="reply-line">
 							<text class="reply-name">{{ c.userId }}</text>
 							<text class="reply-colon">：</text>
 							<text class="reply-text">{{ c.content }}</text>
 						</text>
 					</view>
-					
-					<view v-if="postItem.post.commentCount > 2" class="reply-more"
-						@click="toPostDetail(postItem)">
+
+					<view v-if="postItem.post.commentCount > 2" class="reply-more" @click="toPostDetail(postItem)">
 						<text class="reply-more-text">共{{ postItem.post.commentCount }}条评论</text>
 					</view>
 				</view>
 			</view>
-			
+
 			<view v-if="loading" class="load-tip">加载中...</view>
-			<view v-else-if="!hasMore"class="load-tip">没有更多了～</view>
+			<view v-else-if="!hasMore" class="load-tip">没有更多了～</view>
 		</scroll-view>
 
 		<view class="drawer-mask" :class="{ show: isDrawerOpen }" @click="closeDrawer" />
@@ -371,20 +454,20 @@
 				<text class="drawer-title">菜单</text>
 			</view>
 			<view class="drawer-list">
-			  <view class="drawer-item" @click="toMine">
-			    <image class="drawer-icon" src="/static/component/mine.png" mode="aspectFit" />
-			    <text class="drawer-item-text">我的资料</text>
-			  </view>
-			  
-			  <view class="drawer-item" @click="toAlarm">
-			    <image class="drawer-icon" src="/static/component/alarm.png" mode="aspectFit" />
-			    <text class="drawer-item-text">消息提醒</text>
-			  </view>
-			
-			  <view class="drawer-item danger" @click="onLogout">
-			    <image class="drawer-icon" src="/static/component/logout.png" mode="aspectFit" />
-			    <text class="drawer-item-text">退出登录</text>
-			  </view>
+				<view class="drawer-item" @click="toMine">
+					<image class="drawer-icon" src="/static/component/mine.png" mode="aspectFit" />
+					<text class="drawer-item-text">我的资料</text>
+				</view>
+
+				<view class="drawer-item" @click="toAlarm">
+					<image class="drawer-icon" src="/static/component/alarm.png" mode="aspectFit" />
+					<text class="drawer-item-text">消息提醒</text>
+				</view>
+
+				<view class="drawer-item danger" @click="onLogout">
+					<image class="drawer-icon" src="/static/component/logout.png" mode="aspectFit" />
+					<text class="drawer-item-text">退出登录</text>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -637,7 +720,7 @@
 		font-size: 24rpx;
 		color: #666;
 	}
-	
+
 	.load-tip {
 		padding: 14rpx 0 8rpx;
 		text-align: center;
@@ -711,35 +794,40 @@
 	}
 
 	.drawer-item {
-	  padding: 26rpx 18rpx;
-	  margin: 4px 0;
-	  border-radius: 14rpx;
-	  background: #fff;
-	  display: flex;             
-	  align-items: center;        
-	  gap: 16rpx;               
+		padding: 26rpx 18rpx;
+		margin: 4px 0;
+		border-radius: 14rpx;
+		background: #fff;
+		display: flex;
+		align-items: center;
+		gap: 16rpx;
 	}
-	
+
 	.drawer-icon {
-	  width: 32rpx;
-	  height: 32rpx;
-	  flex-shrink: 0;             /* ✅ 不被挤压 */
-	  display: block;             /* ✅ 去掉 inline 基线影响 */
+		width: 32rpx;
+		height: 32rpx;
+		flex-shrink: 0;
+		/* ✅ 不被挤压 */
+		display: block;
+		/* ✅ 去掉 inline 基线影响 */
 	}
-	
+
 	.drawer-item-text {
-	  font-size: 30rpx;
-	  color: #222;
-	  line-height: 1;             /* ✅ 更稳 */
-	  margin: 0;                  /* ✅ 删掉你原来的 20px */
+		font-size: 30rpx;
+		color: #222;
+		line-height: 1;
+		/* ✅ 更稳 */
+		margin: 0;
+		/* ✅ 删掉你原来的 20px */
 	}
-	
+
 	/* danger 保持不变 */
 	.drawer-item.danger {
-	  background: #fff2f0;
+		background: #fff2f0;
 	}
+
 	.drawer-item.danger .drawer-item-text {
-	  color: #d4380d;
-	  font-weight: 400;
+		color: #d4380d;
+		font-weight: 400;
 	}
 </style>

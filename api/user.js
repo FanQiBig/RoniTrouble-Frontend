@@ -15,9 +15,9 @@ export const userApi = {
 
 	getUserInfo(userId) {
 		if (userId === undefined || userId === null || userId === '') {
-			return request.get('/userInfo')
+			return request.get('/userInfo/me')
 		}
-		return request.get('/userInfo', { userId })
+		return request.get('/userInfo/me', { userId })
 	},
 
 	updateUserInfo(data, userId) {

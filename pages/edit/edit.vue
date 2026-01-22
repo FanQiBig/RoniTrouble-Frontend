@@ -6,30 +6,43 @@
 	import {
 		userApi
 	} from '@/api/user.js'
+	import {
+		postApi
+	} from '@/api/post.js'
 
 	const statusBarH = ref(0)
 	const safeBottom = ref(0)
 	const saving = ref(false)
+	const uploadingAvatar = ref(false)
 	const userId = ref('')
 	const userEmail = ref('')
 
-	onMounted(() => {
+	onMounted(async () => {
 		const sys = uni.getSystemInfoSync()
 		statusBarH.value = sys.statusBarHeight || 0
 		safeBottom.value = sys.safeAreaInsets?.bottom || 0
 		safeBottom.value = 0
 		userEmail.value = uni.getStorageSync('email') || ''
-		loadUserInfo()
+		await loadUserInfo()
+		applyPrefillGender()
 	})
 
 	const form = ref({
 		avatarUrl: '/static/avatar/default.png',
 		nickname: '',
 		intro: '',
-		gender: '保密',
+		gender: '',
 		birthday: '',
 		location: ''
 	})
+	const legacyProfileCacheKey = 'user_profile'
+	const profileCacheKey = () => (userId.value ? `user_profile_${userId.value}` : '')
+
+	function persistProfileCache() {
+		const key = profileCacheKey()
+		if (!key) return
+		uni.setStorageSync(key, form.value)
+	}
 
 	function decodeBase64Url(input = '') {
 		if (!input) return ''
@@ -72,19 +85,20 @@
 
 	function hydrateUserIdFallback() {
 		if (userId.value) return
-		const cachedId = uni.getStorageSync('user_id')
-		if (cachedId) {
-			userId.value = String(cachedId)
-			return
-		}
 		const tokenId = getUserIdFromToken()
 		if (tokenId !== undefined && tokenId !== null && tokenId !== '') {
 			userId.value = String(tokenId)
 			uni.setStorageSync('user_id', userId.value)
+			return
+		}
+		const cachedId = uni.getStorageSync('user_id')
+		if (cachedId) {
+			userId.value = String(cachedId)
 		}
 	}
 
 	function applyUserInfo(data = {}) {
+		const mappedGender = normalizeGenderLabel(data.gender) || normalizeGenderLabel(data.sex)
 		if (data.userId !== undefined && data.userId !== null) {
 			userId.value = String(data.userId)
 			uni.setStorageSync('user_id', userId.value)
@@ -94,6 +108,7 @@
 			avatarUrl: data.avatarUrl ?? data.avtarUrl ?? form.value.avatarUrl,
 			nickname: data.nickname ?? form.value.nickname,
 			intro: data.introduction ?? form.value.intro,
+			gender: mappedGender || form.value.gender,
 			birthday: data.birthday ?? form.value.birthday,
 			location: data.location ?? form.value.location
 		}
@@ -102,21 +117,27 @@
 	async function loadUserInfo() {
 		hydrateUserIdFallback()
 		try {
-			const info = await userApi.getUserInfo()
+			const resolvedId = userId.value || undefined
+			const info = await userApi.getUserInfo(resolvedId)
 			if (info) {
 				applyUserInfo(info)
-				uni.setStorageSync('user_profile', form.value)
+				persistProfileCache()
 				return
 			}
 		} catch (error) {
 			console.error('获取用户信息失败:', error)
 		}
-		const cache = uni.getStorageSync('user_profile')
+		const cacheKey = profileCacheKey()
+		const cache = cacheKey ? uni.getStorageSync(cacheKey) : null
 		if (cache) {
 			form.value = {
 				...form.value,
 				...cache
 			}
+			return
+		}
+		if (uni.getStorageSync(legacyProfileCacheKey)) {
+			uni.removeStorageSync(legacyProfileCacheKey)
 		}
 		hydrateUserIdFallback()
 	}
@@ -125,14 +146,58 @@
 		uni.navigateBack()
 	}
 
-	/** 头像 */
-	function changeAvatar() {
-		uni.chooseImage({
-			count: 1,
-			success: (res) => {
-				form.value.avatarUrl = res.tempFilePaths[0]
-			}
+	function pickAvatar() {
+		return new Promise((resolve, reject) => {
+			uni.chooseImage({
+				count: 1,
+				success: resolve,
+				fail: reject
+			})
 		})
+	}
+
+	async function uploadAvatar(filePath) {
+		const suffix = filePath && filePath.includes('.') ? filePath.split('.').pop() : 'jpg'
+		const safeSuffix = suffix ? suffix.replace(/[^a-zA-Z0-9]/g, '') : 'jpg'
+		const fileName = `avatar_${userId.value || Date.now()}.${safeSuffix || 'jpg'}`
+		const urlInfo = await postApi.getFileUrlInfo(fileName, 'AVATAR')
+		await postApi.uploadFile(urlInfo.PresignedUrl, filePath)
+		return urlInfo.DownloadUrl || ''
+	}
+
+	/** 头像 */
+	async function changeAvatar() {
+		if (uploadingAvatar.value) return
+		try {
+			const res = await pickAvatar()
+			const filePath = res?.tempFilePaths?.[0]
+			if (!filePath) return
+			uploadingAvatar.value = true
+			uni.showLoading({ title: '头像上传中...' })
+			const downloadUrl = await uploadAvatar(filePath)
+			if (downloadUrl) {
+				form.value.avatarUrl = downloadUrl
+				persistProfileCache()
+				uni.showToast({
+					title: '头像已更新',
+					icon: 'success'
+				})
+			} else {
+				uni.showToast({
+					title: '头像上传失败',
+					icon: 'none'
+				})
+			}
+		} catch (error) {
+			console.error('头像上传失败:', error)
+			uni.showToast({
+				title: '头像上传失败',
+				icon: 'none'
+			})
+		} finally {
+			uploadingAvatar.value = false
+			uni.hideLoading()
+		}
 	}
 	
 	const editorOpen = ref(false)
@@ -167,7 +232,60 @@
 		closeEditor()
 	}
 
-	const genderOptions = ['女', '男', '保密']
+	const genderOptions = ['女', '男']
+	const genderLabelMap = {
+		boy: '男',
+		girl: '女',
+		MALE: '男',
+		FEMALE: '女',
+		男: '男',
+		女: '女'
+	}
+	const genderApiMap = {
+		男: 'MALE',
+		女: 'FEMALE'
+	}
+
+	function safeDecode(input = '') {
+		if (!input) return ''
+		try {
+			return decodeURIComponent(input)
+		} catch (error) {
+			return input
+		}
+	}
+
+	function getQueryGender() {
+		try {
+			const pages = getCurrentPages()
+			const current = pages[pages.length - 1]
+			return current?.options?.gender || ''
+		} catch (error) {
+			return ''
+		}
+	}
+
+	function resolvePrefillGender() {
+		const raw = getQueryGender() || uni.getStorageSync('register_gender') || ''
+		const decoded = typeof raw === 'string' ? safeDecode(raw) : String(raw)
+		return genderLabelMap[decoded] || ''
+	}
+
+	function normalizeGenderLabel(value) {
+		return genderLabelMap[value] || ''
+	}
+
+	function mapGenderToApi(value) {
+		return genderApiMap[value] || ''
+	}
+
+	function applyPrefillGender() {
+		const prefill = resolvePrefillGender()
+		if (!prefill || !genderOptions.includes(prefill)) return
+		if (form.value.gender) return
+		form.value.gender = prefill
+		uni.removeStorageSync('register_gender')
+	}
 
 	function onGenderChange(e) {
 		const idx = Number(e.detail.value)
@@ -180,13 +298,22 @@
 
 	function onSave() {
 		if (saving.value) return
+		if (!form.value.gender) {
+			uni.showToast({
+				title: '请选择性别',
+				icon: 'none'
+			})
+			return
+		}
 		saving.value = true
 		const numericId = Number(userId.value)
+		const genderValue = mapGenderToApi(form.value.gender)
 		const payload = {
 			userId: Number.isFinite(numericId) ? numericId : undefined,
 			nickname: form.value.nickname,
 			avtarUrl: form.value.avatarUrl,
 			introduction: form.value.intro,
+			gender: genderValue,
 			birthday: form.value.birthday,
 			location: form.value.location
 		}
@@ -199,11 +326,14 @@
 		}, {})
 		userApi.addOrUpdateUserInfo(data, data.userId)
 			.then(() => {
-				uni.setStorageSync('user_profile', form.value)
+				persistProfileCache()
 				uni.showToast({
 					title: '保存成功',
 					icon: 'success'
 				})
+				setTimeout(() => {
+					uni.redirectTo({ url: '/pages/mine/mine' })
+				}, 300)
 			})
 			.catch((error) => {
 				console.error('保存失败:', error)
@@ -329,12 +459,11 @@
 <style scoped>
 	.page {
 		min-height: 100vh;
-		background: #f6f6f6;
+		background: #f6f7fb;
 	}
 
-	/* 顶部导航 */
 	.nav {
-		background: #f6f6f6;
+		background: #ffffff;
 	}
 
 	.nav-inner {
