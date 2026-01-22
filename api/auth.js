@@ -34,4 +34,13 @@ export const authApi = {
 	}
 }
 
+export function reportIP(ip, userId = null) {
+	return request.post('/ip', null, {
+		params: {
+			ip,
+			userId
+		}
+	})
+}
+
 export default authApi

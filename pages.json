@@ -18,28 +18,13 @@
 			}
 		},
 		{
-			"path": "pages/foodShare/foodShare",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/merchant/merchant",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/detail/detail",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/chat/chat",
-			"style": {
-				"navigationStyle": "custom"
-			}
+			"path": "pages/chat/chat"
 		},
 		{
 			"path": "pages/mine/mine",
@@ -55,6 +40,12 @@
 		},
 		{
 			"path": "pages/alarm/alarm",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/friend/friend",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -77,10 +68,10 @@
 				"selectedIconPath": "/static/tabs/add-active.png"
 			},
 			{
-				"text": "美食",
-				"pagePath": "pages/foodShare/foodShare",
-				"iconPath": "/static/tabs/food.png",
-				"selectedIconPath": "static/tabs/food-active.png"
+				"text": "好友",
+				"pagePath": "pages/friend/friend",
+				"iconPath": "/static/tabs/friend.png",
+				"selectedIconPath": "/static/tabs/friend-active.png"
 			}
 		]
 	},

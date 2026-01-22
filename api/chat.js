@@ -64,4 +64,33 @@ export const chatApi = {
 	}
 }
 
+export function getPrivateChats() {
+	return request.get('/privateChat')
+}
+
+export function sendTextMessage(conversationId, content, userId) {
+	return request.post('/message', {
+		content,
+		conversationId,
+		messageType: 'TEXT'
+	})
+}
+
+export function sendImageMessage(conversationId, content, userId) {
+	return request.post('/message', {
+		content,
+		conversationId,
+		messageType: 'IMAGE'
+	})
+}
+
+export function sendFileMessage(conversationId, content, rawFileName, userId) {
+	return request.post('/message', {
+		content,
+		conversationId,
+		messageType: 'FILE',
+		rawFileName
+	})
+}
+
 export default chatApi

@@ -25,11 +25,11 @@ const confirmPwd = ref('')
 const showPwd = ref(false)
 const showPwd2 = ref(false)
 const loading = ref(false)
-const role = ref('student')
+const gender = ref('boy')
 
-const roleOptions = [
-	{ value: 'student', label: '我是学生', icon: '/static/register/student.png' },
-	{ value: 'merchant', label: '我是商家', icon: '/static/register/merchant.png' }
+const genderOptions = [
+	{ value: 'boy', label: '我是男生', icon: '/static/register/boy.png' },
+	{ value: 'girl', label: '我是女生', icon: '/static/register/girl.png' }
 ]
 
 const titleText = computed(() => (mode.value === 'login' ? '您好，欢迎登录！' : '您好，欢迎注册！'))
@@ -79,8 +79,8 @@ function switchMode() {
 	confirmPwd.value = ''
 }
 
-function selectRole(value) {
-	role.value = value
+function selectGender(value) {
+	gender.value = value
 }
 
 async function onSubmit() {
@@ -126,7 +126,7 @@ async function onSubmit() {
 			)
 			uni.setStorageSync('token', res.token)
 			uni.setStorageSync('email', res.email)
-			uni.setStorageSync('role', res.role)
+			uni.setStorageSync('gender', res.gender)
 			const loginUserId = res.userId ?? res.userID ?? res.id
 			if (loginUserId !== undefined && loginUserId !== null && loginUserId !== '') {
 				uni.setStorageSync('user_id', String(loginUserId))
@@ -137,9 +137,9 @@ async function onSubmit() {
 			})
 			setTimeout(() => routeAfterLogin(), 250)
 		} else {
-			if (role.value === 'student') {
+			if (gender.value === 'student') {
 				await authApi.registerStudent(account.value, password.value)
-			} else if (role.value === 'merchant') {
+			} else if (gender.value === 'merchant') {
 				await authApi.registerMerchant(account.value, password.value, '', '', '')
 			} else {
 				await authApi.register(account.value, password.value)
@@ -178,13 +178,13 @@ async function onSubmit() {
 
 				<text class="title">{{ titleText }}</text>
 
-				<view v-if="mode === 'register'" class="role-section">
-					<text class="role-title">请选择身份</text>
-					<view class="role-list">
-						<view v-for="r in roleOptions" :key="r.value" class="role-item"
-							:class="{ active: role === r.value }" @tap="selectRole(r.value)">
-							<image class="role-img" :src="r.icon" mode="aspectFit" />
-							<text class="role-text">{{ r.label }}</text>
+				<view v-if="mode === 'register'" class="gender-section">
+					<text class="gender-title">请选择身份</text>
+					<view class="gender-list">
+						<view v-for="r in genderOptions" :key="r.value" class="gender-item"
+							:class="{ active: gender === r.value }" @tap="selectGender(r.value)">
+							<image class="gender-img" :src="r.icon" mode="aspectFit" />
+							<text class="gender-text">{{ r.label }}</text>
 						</view>
 					</view>
 				</view>
@@ -304,11 +304,11 @@ async function onSubmit() {
 	margin-bottom: 26rpx;
 }
 
-.role-section {
+.gender-section {
 	margin-top: -6rpx;
 }
 
-.role-title {
+.gender-title {
 	display: block;
 	font-size: 26rpx;
 	color: #8b95a8;
@@ -316,12 +316,12 @@ async function onSubmit() {
 	margin-bottom: 14rpx;
 }
 
-.role-list {
+.gender-list {
 	display: flex;
 	gap: 16rpx;
 }
 
-.role-item {
+.gender-item {
 	flex: 1;
 	height: 150rpx;
 	border-radius: 20rpx;
@@ -334,17 +334,17 @@ async function onSubmit() {
 	gap: 12rpx;
 }
 
-.role-item.active {
+.gender-item.active {
 	border-color: #2fb2ff;
 	box-shadow: 0 10rpx 24rpx rgba(47, 178, 255, 0.18);
 }
 
-.role-img {
+.gender-img {
 	width: 100rpx;
 	height: 100rpx;
 }
 
-.role-text {
+.gender-text {
 	font-size: 24rpx;
 	color: #333;
 	font-weight: 800;
@@ -376,14 +376,14 @@ async function onSubmit() {
 	margin-top: 34rpx;
 	height: 98rpx;
 	border-radius: 999rpx;
-	background: linear-gradient(90deg, #6ace34 0%, #39a9fe 100%);
+	background: linear-gradient(90deg, #a1f6ff 0%, #4e92fe 100%);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 34rpx;
 	letter-spacing: 4px;
 	font-weight: 600;
-	color: #f0f7ff;
+	color: #f2faf2;
 }
 
 .btn.disabled {
